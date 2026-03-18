@@ -18,17 +18,15 @@
 		const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 		videoElement.srcObject = stream;
 		videoElement.play();
-	})
+	});
 </script>
-
 
 <div class="app">
 	<h1 class="title">Tela inicial</h1>
 	<video class="video" bind:this={videoElement}>Seu dispositivo não possue suporte a webcam</video>
-	<canvas class="canvas" bind:this={canvasElement} width={width} height={height}></canvas>
+	<canvas class="canvas" bind:this={canvasElement} {width} {height}></canvas>
 	<a class="link" href={resolve('/editor')} title="Editor">Editor</a>
 </div>
-
 
 <style>
 	.app {
@@ -42,7 +40,8 @@
 		margin: 0;
 		text-align: center;
 	}
-	.app .canvas, .app .video {
+	.app .canvas,
+	.app .video {
 		width: 100%;
 		position: absolute;
 	}
