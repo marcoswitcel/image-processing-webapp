@@ -8,7 +8,7 @@ const config = {
 			assets: 'build',
 			precompress: false,
 			strict: true,
-            // poderia ser usado pra receber as requests de páginas não encontradas
+			// poderia ser usado pra receber as requests de páginas não encontradas
 			fallback: '404.html'
 		}),
 		prerender: {
