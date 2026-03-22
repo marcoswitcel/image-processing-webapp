@@ -35,8 +35,27 @@
 		videoElement.play();
 
 		onFrameHandle = requestAnimationFrame(function onFrame() {
+			
 			if (videoElement) {
-				ctx.drawImage(videoElement, 0, 0, mediaStreamWidth, mediaStreamHeight, 0, 0, width, height);
+				const viewRatio = width / height;
+				const viewRatioInverted = height / width;
+				const videoRatio = mediaStreamWidth / mediaStreamHeight;
+				let sourceWidth = 0;
+				let sourceHeight = 0;
+				let dx = 0;
+				let dy = 0;
+
+				if (viewRatio > videoRatio) {
+					sourceWidth = mediaStreamWidth ;
+					sourceHeight = mediaStreamWidth * viewRatioInverted;
+					dy = (mediaStreamHeight - sourceHeight) / 2;
+				} else {
+					sourceWidth = mediaStreamHeight * viewRatio;
+					sourceHeight = mediaStreamHeight;
+					dx = (mediaStreamWidth - sourceWidth) / 2;
+				}
+
+				ctx.drawImage(videoElement, dx, dy, sourceWidth, sourceHeight, 0, 0, width, height);
 			}
 
 			onFrameHandle = requestAnimationFrame(onFrame);
