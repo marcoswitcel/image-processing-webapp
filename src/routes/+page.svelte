@@ -3,12 +3,15 @@
 	import { onDestroy, onMount } from 'svelte';
 
 	const width = window.innerWidth;
-	const height = window.innerWidth;
+	const height = window.innerHeight;
 
 	// @todo João, deixar a width e a height responsivas as trocas de dimensão
 
 	let canvasElement: HTMLCanvasElement | null = null;
 	let videoElement: HTMLVideoElement | null = null;
+
+	let mediaStreamWidth = 0;
+	let mediaStreamHeight = 0;
 
 	let onFrameHandle = 0;
 
@@ -25,11 +28,15 @@
 
 		const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 		videoElement.srcObject = stream;
+		videoElement.addEventListener('loadedmetadata', () => {
+			mediaStreamWidth = videoElement?.videoWidth ?? 0;
+			mediaStreamHeight = videoElement?.videoHeight ?? 0;
+		});
 		videoElement.play();
 
 		onFrameHandle = requestAnimationFrame(function onFrame() {
 			if (videoElement) {
-				ctx.drawImage(videoElement, 0, 0, width, height);
+				ctx.drawImage(videoElement, 0, 0, mediaStreamWidth, mediaStreamHeight, 0, 0, width, height);
 			}
 
 			onFrameHandle = requestAnimationFrame(onFrame);
