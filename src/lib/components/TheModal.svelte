@@ -2,14 +2,14 @@
 	import { modalStore, closeModal } from '$lib/stores/modalStore';
 	import { fade, fly } from 'svelte/transition';
 
-    
+    const Component = $derived($modalStore.component);
 </script>
 
 {#if $modalStore.isOpen }
 <div class="backdrop" transition:fade={{ duration: 250 }}>
     <div class="modal-content" transition:fly={{ y: 20, duration: 300 }}>
         <!-- @todo joão, não consegue entender que o close existe... -->
-        <svelte:component this={$modalStore.component} {...$modalStore.props} on:close={closeModal} />
+        <Component {...$modalStore.props} on:close={closeModal}></Component>
     </div>
 </div>
 {/if}
