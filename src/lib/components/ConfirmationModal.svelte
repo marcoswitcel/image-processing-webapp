@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
+	import Button from "./Button.svelte";
 
     interface Props {
         title: string;
@@ -22,8 +23,8 @@
     {/if}
     
     <div class="buttons">
-        <button onclick={() => choose(false)}>Não</button>
-        <button onclick={() => choose(true)}>Sim</button>
+        <Button onclick={() => choose(false)} label="Não"></Button>
+        <Button onclick={() => choose(true)} label="Sim"></Button>
     </div>
 </div>
 
