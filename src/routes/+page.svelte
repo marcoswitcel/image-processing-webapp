@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { Modal } from '$lib/stores/modalStore';
 	import { onDestroy, onMount } from 'svelte';
 
 	const width = window.innerWidth;
@@ -15,8 +16,6 @@
 
 	let onFrameHandle = 0;
 
-	// @todo João introduzir confirmações
-
 	// @todo João botão de trocar câmera frontal e trazeira
 
 	onMount(async () => {
@@ -26,7 +25,35 @@
 
 		if (ctx === null) return;
 
-		const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+		const permission = await navigator.permissions.query({ name: 'camera' });
+
+		permission.addEventListener('change', () => {
+			// @todo joão, avaliar como fazer uso desse recurso
+			console.log('permissão mudada');
+		})
+
+		if (permission.state === 'denied') {
+			Modal.alert('O app não possui acesso a câmera', 'Caso deseje usar o app será necessário liberar o acesso a câmera');
+			return
+		}
+
+		if (permission.state === 'prompt') {
+			const accept = await Modal.confirm('É necessário conceder acesso a câmera', 'O aplicativo irá solicitar acessoa a câmera');
+	
+			if (!accept) {
+				return;
+			}
+		}
+
+
+		const userMediaPromise = navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+		
+		Modal.loading();
+
+		const stream = await userMediaPromise;
+
+		Modal.close();
+
 		videoElement.srcObject = stream;
 		videoElement.addEventListener('loadedmetadata', () => {
 			mediaStreamWidth = videoElement?.videoWidth ?? 0;

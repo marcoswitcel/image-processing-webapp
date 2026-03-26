@@ -1,5 +1,6 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
+	import TheModal from '$lib/components/TheModal.svelte';
 
 	let { children } = $props();
 </script>
@@ -11,3 +12,5 @@
 <div class="app-container">
 	{@render children()}
 </div>
+
+<TheModal />
