@@ -9,8 +9,7 @@
 {#if $modalStore.isOpen }
 <div class="backdrop" transition:fade={{ duration: 250 }}>
     <div class="modal-content" transition:fly={{ y: 20, duration: 300 }}>
-        <!-- @todo joão, não consegue entender que o close existe... -->
-        <Component {...$modalStore.props} on:close={Modal.close}></Component>
+        <Component {...$modalStore.props} close={Modal.close}></Component>
     </div>
 </div>
 {/if}

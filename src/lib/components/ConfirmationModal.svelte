@@ -1,19 +1,14 @@
 <script lang="ts">
-	import { createEventDispatcher } from "svelte";
 	import Button from "./Button.svelte";
 
     interface Props {
         title: string;
         description: string;
+        close: (value: boolean) => void
     }
 
-    const { title, description }: Props  = $props();
+    const { title, description, close }: Props  = $props();
 
-    const dispatch = createEventDispatcher()
-
-    function choose(value: boolean) {
-        dispatch('close', value);
-    }
 </script>
 
 <div class="content">
@@ -23,8 +18,8 @@
     {/if}
     
     <div class="buttons">
-        <Button onclick={() => choose(false)} label="Não"></Button>
-        <Button onclick={() => choose(true)} label="Sim"></Button>
+        <Button onclick={() => close(false)} label="Não"></Button>
+        <Button onclick={() => close(true)} label="Sim"></Button>
     </div>
 </div>
 

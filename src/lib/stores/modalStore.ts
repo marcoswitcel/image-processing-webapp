@@ -33,18 +33,17 @@ export function open<T extends Record<string, unknown>>(component: Component<T>,
     })
 }
 
-function close() {
+function close(value?: unknown) {
 
     // @todo joão, precisa desmontar o componente depois da animação de fade-out
     modalStore.set({ component: null, props: {}, isOpen: false });
 
     // @todo João, falta trocar evento e captura o valor
-    resolveIfAnyPending();
+    resolveIfAnyPending(value);
 }
 
 export function confirm(title: string, description: string) {
-    // @todo joão, passar props, title e description
-    return open(ConfirmationModal, { title, description, });
+    return open(ConfirmationModal, { title, description, close: close });
 }
 
 export function alert() {
