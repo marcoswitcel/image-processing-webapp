@@ -16,8 +16,6 @@
 
 	let onFrameHandle = 0;
 
-	// @todo João introduzir confirmações
-
 	// @todo João botão de trocar câmera frontal e trazeira
 
 	onMount(async () => {

@@ -10,7 +10,7 @@ export interface ModalState {
     props?: Record<string, unknown>;
 }
 
-let lastPromise: ((value: void | PromiseLike<void>) => void) | null = null;
+let lastPromise: ((value: unknown) => void) | null = null;
 
 function resolveIfAnyPending(value: unknown = false) {
     lastPromise?.(value as void);
@@ -23,14 +23,13 @@ export const modalStore = writable<ModalState>({
     props: {},
 });
 
-// @todo joão deixar assíncrono
-// @todo joão fazer isso typesafe
-export function open<T extends Record<string, unknown>>(component: Component<T>, props: T): Promise<void> {
+
+export function open<T extends Record<string, unknown>, P = void>(component: Component<T>, props: T): Promise<P> {
     console.assert(lastPromise === null, 'Não deveria abrir modais em cima de outros modais');
     resolveIfAnyPending();
 
     return new Promise((resolve) => {
-        lastPromise = resolve;
+        lastPromise = resolve as (value: unknown) => void;
         modalStore.set({ component: component as Component, props, isOpen: true });
     })
 }
@@ -40,19 +39,18 @@ function close(value?: unknown) {
     // @todo joão, precisa desmontar o componente depois da animação de fade-out
     modalStore.set({ component: null, props: {}, isOpen: false });
 
-    // @todo João, falta trocar evento e captura o valor
     resolveIfAnyPending(value);
 }
 
-export function confirm(title: string, description: string) {
+export function confirm(title: string, description: string): Promise<boolean> {
     return open(ConfirmationModal, { title, description, close: close });
 }
 
-export function alert(title: string, description: string) {
+export function alert(title: string, description: string): Promise<void> {
     return open(AlertModal, { title, description, close: close });
 }
 
-export function loading() {
+export function loading(): Promise<void> {
     return open(LoadingModal, {});
 }
 

@@ -13,9 +13,6 @@
 <button class="button" disabled={disabled||isWaiting} onclick={onclick}>{label}</button>
 
 <style>
-/**
- * @todo João, usar variáveis aqui... 
- */
 .button {
     text-align: center;
     padding: 0.6em 1em;
