@@ -1,4 +1,6 @@
+import AlertModal from '$lib/components/AlertModal.svelte';
 import ConfirmationModal from '$lib/components/ConfirmationModal.svelte';
+import LoadingModal from '$lib/components/LoadingModal.svelte';
 import type { Component } from 'svelte';
 import { writable } from 'svelte/store';
 
@@ -46,9 +48,12 @@ export function confirm(title: string, description: string) {
     return open(ConfirmationModal, { title, description, close: close });
 }
 
-export function alert() {
-    // @todo joão, criar alert
-    // return open(ConfirmationModal, {});
+export function alert(title: string, description: string) {
+    return open(AlertModal, { title, description, close: close });
+}
+
+export function loading() {
+    return open(LoadingModal, {});
 }
 
 export const Modal = {
@@ -56,4 +61,5 @@ export const Modal = {
     confirm,
     alert,
     close,
+    loading,
 }
