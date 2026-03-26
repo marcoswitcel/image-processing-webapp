@@ -23,7 +23,7 @@
     line-height: 1.1;
     background-color: blue;
     border: none;
-    border-radius: 3px;
+    border-radius: var(--border-radius-global);
     outline: none;
     color: white;
     font-weight: bold;

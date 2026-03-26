@@ -31,7 +31,11 @@
     padding: 1rem;
     background-color: white;
     min-width: 300px;
+    max-height: 90vh;
     max-width: 90vw;
     height: fit-content;
+    overflow: hidden;
+    border-radius: var(--border-radius-global);
+    box-shadow: 2px 2px 15px rgba(0,0,0,.2);
 }
 </style>
