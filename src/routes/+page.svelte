@@ -98,6 +98,7 @@
 	<h1 class="title">Câmera</h1>
 	<video class="video" bind:this={videoElement}>Seu dispositivo não possue suporte a webcam</video>
 	<canvas class="canvas" bind:this={canvasElement} {width} {height}></canvas>
+	<button class="floaty" type="button" title="Captura"></button>
 	<a class="link" href={resolve('/editor')} title="Editor">Editor</a>
 </div>
 
@@ -130,4 +131,17 @@
 		left: 1rem;
 		bottom: 1rem;
 	}
+	.floaty {
+		position: fixed;
+		left: 50%;
+		transform: translateX(-50%);
+		bottom: 3rem;
+		width: 5em;
+		height: 5em;
+		display: block;
+		background-color: rgba(0,0,0,.5);
+		border-radius: 50%;
+		border: none;
+	}
+
 </style>
