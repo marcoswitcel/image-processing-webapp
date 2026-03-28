@@ -2,9 +2,10 @@
 	import { resolve } from '$app/paths';
 	import { Modal } from '$lib/stores/modalStore';
 	import { onDestroy, onMount } from 'svelte';
+	import { innerWidth, innerHeight } from 'svelte/reactivity/window';
 
-	const width = window.innerWidth;
-	const height = window.innerHeight;
+	const width = innerWidth.current ?? 0;
+	const height = innerHeight.current ?? 0;
 
 	// @todo João, deixar a width e a height responsivas as trocas de dimensão
 
