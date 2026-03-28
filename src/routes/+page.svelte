@@ -126,7 +126,7 @@
 		position: absolute;
 	}
 	.camera-view .link {
-		position: absolute;
+		position: fixed;
 		left: 1rem;
 		bottom: 1rem;
 	}
