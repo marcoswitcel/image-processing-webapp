@@ -4,11 +4,6 @@
 	import { onDestroy, onMount } from 'svelte';
 	import { innerWidth, innerHeight } from 'svelte/reactivity/window';
 
-	const width = innerWidth.current ?? 0;
-	const height = innerHeight.current ?? 0;
-
-	// @todo João, deixar a width e a height responsivas as trocas de dimensão
-
 	let canvasElement: HTMLCanvasElement | null = null;
 	let videoElement: HTMLVideoElement | null = null;
 
@@ -63,7 +58,9 @@
 		videoElement.play();
 
 		onFrameHandle = requestAnimationFrame(function onFrame() {
-			
+			const width = innerWidth.current ?? 0;
+			const height = innerHeight.current ?? 0;
+
 			if (videoElement) {
 				const viewRatio = width / height;
 				const viewRatioInverted = height / width;
@@ -93,13 +90,27 @@
 	onDestroy(() => {
 		cancelAnimationFrame(onFrameHandle);
 	});
+
+	function captureAndDownload() {
+		if (canvasElement === null) return;
+
+		const link = document.createElement('a');
+		link.href = canvasElement.toDataURL('image/png');
+
+		const timeMark = new Date().toISOString().replace('T', '_').replace(/(:|\.)/g, '-').replace('Z', '')
+		link.download = `capture-${timeMark}.png`;
+
+		link.click();
+
+		link.remove();
+	}
 </script>
 
 <div class="camera-view">
 	<h1 class="title">Câmera</h1>
 	<video class="video" bind:this={videoElement}>Seu dispositivo não possue suporte a webcam</video>
-	<canvas class="canvas" bind:this={canvasElement} {width} {height}></canvas>
-	<button class="floaty" type="button" title="Captura"></button>
+	<canvas class="canvas" bind:this={canvasElement} width={innerWidth.current ?? 0} height={innerHeight.current ?? 0}></canvas>
+	<button class="floaty" type="button" title="Captura" onclick={captureAndDownload}></button>
 	<a class="link" href={resolve('/editor')} title="Editor">Editor</a>
 </div>
 
@@ -135,14 +146,20 @@
 	.floaty {
 		position: fixed;
 		left: 50%;
-		transform: translateX(-50%);
+		transform: translateX(-50%) scale(1);
 		bottom: 3rem;
 		width: 5em;
 		height: 5em;
 		display: block;
-		background-color: rgba(0,0,0,.5);
+		background-color: rgba(0,0,0,.7);
 		border-radius: 50%;
 		border: none;
+		transition: .2s all ease-in;
+		cursor: pointer;
+	}
+
+	.floaty:active {
+		transform: translateX(-50%) scale(.85);
 	}
 
 </style>
