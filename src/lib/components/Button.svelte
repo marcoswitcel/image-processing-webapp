@@ -10,7 +10,7 @@
     const { label, isWaiting = false, disabled = false, onclick = null }: Props  = $props();
 </script>
 
-<button class="button" disabled={disabled||isWaiting} onclick={onclick}>{label}</button>
+<button class="button" type="button" disabled={disabled||isWaiting} onclick={onclick}>{label}</button>
 
 <style>
 .button {
