@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { filterSelected } from '$lib/stores/filterSelected.svelte';
 	import { Modal } from '$lib/stores/modalStore';
 	import { onDestroy, onMount } from 'svelte';
 	import { innerWidth, innerHeight } from 'svelte/reactivity/window';
@@ -17,7 +18,7 @@
 	onMount(async () => {
 		if (canvasElement === null || videoElement === null) return;
 
-		const ctx = canvasElement.getContext('2d');
+		const ctx = canvasElement.getContext('2d', { willReadFrequently: true });
 
 		if (ctx === null) return;
 
@@ -81,6 +82,16 @@
 				}
 
 				ctx.drawImage(videoElement, dx, dy, sourceWidth, sourceHeight, 0, 0, width, height);
+
+				if (filterSelected.current) {
+					const imageDataIn = ctx.getImageData(0, 0, width, height);
+					const imageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
+	
+					filterSelected.current(imageDataIn, imageDataOut);
+	
+					// Desenha a nova imagem no canvas
+					ctx.putImageData(imageDataOut, 0, 0);
+				}
 			}
 
 			onFrameHandle = requestAnimationFrame(onFrame);
