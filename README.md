@@ -44,3 +44,4 @@ You can preview the production build with `npm run preview`.
 ## References
 
 - [https://svelte.dev/docs/kit/introduction](https://svelte.dev/docs/kit/introduction)
+- [https://www.youtube.com/watch?v=uihBwtPIBxM](https://www.youtube.com/watch?v=uihBwtPIBxM)

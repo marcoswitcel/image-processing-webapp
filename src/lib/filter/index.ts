@@ -59,6 +59,11 @@ export function makeFilter(
 	};
 }
 
+/**
+ * @todo João, pelo que vi nesse vídeo: https://www.youtube.com/watch?v=uihBwtPIBxM
+ * é necessário rodar o filtro em uma imagem em tons de cinza e seria bom usar um blur antes de aplicar o detector de bordas...
+ */
+
 export const filterEdgeDetection = makeFilter([
     [-1, 0, 1],
     [-2, 0, 2],
