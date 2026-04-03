@@ -1,11 +1,11 @@
 <script>
 	import { resolve } from '$app/paths';
 	import Button from '$lib/components/Button.svelte';
-	import { filterEdgeDetection } from '$lib/filter';
+	import { filterEdgeDetectionV2 } from '$lib/filter';
 	import { filterSelected } from '$lib/stores/filterSelected.svelte';
 
 	const set = () => { 
-		filterSelected.current = filterEdgeDetection;
+		filterSelected.current = filterEdgeDetectionV2;
 	};
 </script>
 
