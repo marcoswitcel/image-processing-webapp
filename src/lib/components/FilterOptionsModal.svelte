@@ -29,9 +29,6 @@
 .title {
     font-size: 1.5rem;
 }
-.description {
-    font-size: 1rem;
-}
 
 .buttons {
 	display: flex;

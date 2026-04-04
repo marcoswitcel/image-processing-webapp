@@ -21,7 +21,7 @@
     background-color: blue;
     border: none;
     border-radius: var(--border-radius-global);
-    outline: none;
+    outline: 2px solid transparent;
     color: white;
     font-weight: bold;
     transition: all .2s ease-in;
