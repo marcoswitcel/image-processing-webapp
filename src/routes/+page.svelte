@@ -88,6 +88,7 @@
 
 				if (filterSelected.current) {
 					const imageDataIn = ctx.getImageData(0, 0, width, height);
+					// @todo João, reciclar esse buffer
 					const imageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
 	
 					filterSelected.current(imageDataIn, imageDataOut);

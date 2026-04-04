@@ -10,19 +10,36 @@
 
 </script>
 
-<div class="page">
-	<h1>Opções</h1>
-	<p>Pendente implementação</p>
-	<div>
-		<Button label="Filtro de detecção de bordas" onclick={() => close(edgeDetection)}></Button>
+
+<div class="content">
+    <h2 class="title">Filtros Disponíveis</h2>
+    
+    <div class="buttons">
+		<Button label="Nenhum" onclick={() => close(null)}></Button>
 		<Button label="Gaussian Blur" onclick={() => close(gaussianBlur)}></Button>
+		<Button label="Detecção de Bordas" onclick={() => close(edgeDetection)}></Button>
 		<Button label="Detecção de Bordas com Gaussian Blur" onclick={() => close(edgeDetectionWithGaussianBlur)}></Button>
-	</div>
-	
+    </div>
 </div>
 
 <style>
-	.page {
-		padding: 1em;
-	}
+.content {
+    text-align: center;
+}
+.title {
+    font-size: 1.5rem;
+}
+.description {
+    font-size: 1rem;
+}
+
+.buttons {
+	display: flex;
+	flex-direction: column;
+}
+
+:global(.buttons > .button) {
+	margin: .2rem 0;
+}
+
 </style>
