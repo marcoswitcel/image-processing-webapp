@@ -59,11 +59,79 @@ export function makeFilter(
 	};
 }
 
+export function makeFilter5x5(
+	convolutionKernel: number[][]
+): FilterProcessor {
+	const factorsMatrix = convolutionKernel;
+
+	/**
+	 * @param imageDataIn
+	 * @param imageDataOut
+	 * @return
+	 */
+	return function filter(imageDataIn: ImageData, imageDataOut: ImageData): void {
+		const bufferIn = imageDataIn.data;
+		const bufferOut = imageDataOut.data;
+		const imageWidth = imageDataIn.width;
+		const bufferLenght = bufferIn.length;
+
+		for (let i = 0, iter = 0; i < bufferLenght; i += 4) {
+			iter = i + 1;
+			// borda azul
+			if (
+				iter < imageWidth * 4 ||
+				iter > bufferLenght - imageWidth * 4 ||
+				iter % (imageWidth * 4) < 3 ||
+				iter % (imageWidth * 4) > imageWidth * 4 - 4
+			) {
+				bufferOut[i + 0] = 0;
+				bufferOut[i + 1] = 0;
+				bufferOut[i + 2] = 255;
+				bufferOut[i + 3] = 255;
+				continue;
+			}
+
+			let sumR = 0;
+			let sumG = 0;
+			let sumB = 0;
+			for (let j = -2; j <= 2; j++) {
+				for (let k = -2; k <= 2; k++) {
+					const factor = factorsMatrix[k + 2][j + 2];
+					const index = i + j * 4 + k * imageWidth * 4;
+					sumR += bufferIn[index + 0] * factor;
+					sumG += bufferIn[index + 1] * factor;
+					sumB += bufferIn[index + 2] * factor;
+				}
+			}
+
+			bufferOut[i + 0] = sumR; // R value
+			bufferOut[i + 1] = sumG; // G value
+			bufferOut[i + 2] = sumB; // B value
+			bufferOut[i + 3] = 255; // A value
+		}
+	};
+}
+
+
 export const gaussianBlur = makeFilter([
     [ 1/16, 1/8, 1/16 ],
     [ 1/8 , 1/4, 1/8  ],
     [ 1/16, 1/8, 1/16 ]
 ]);
+
+/**
+ * Demonstrações dos cálculos
+ * @note https://dev.to/ikhwanal/gaussian-blur-4nnd
+ */
+export const gaussianBlur5x5 = makeFilter5x5([
+    [ 0.0327, 0.0394, 0.0409, 0.0394, 0.0327, ],
+    [ 0.0394, 0.0456, 0.0482, 0.0456, 0.0394, ],
+    [ 0.0409, 0.0482, 0.0510, 0.0482, 0.0409, ],
+	[ 0.0394, 0.0456, 0.0482, 0.0456, 0.0394, ],
+	[ 0.0327, 0.0394, 0.0409, 0.0394, 0.0327, ],
+]);
+
+
 
 
 /**

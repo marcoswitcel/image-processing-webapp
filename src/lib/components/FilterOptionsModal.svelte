@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { edgeDetection, edgeDetectionWithGaussianBlur, gaussianBlur } from "$lib/filter";
+	import { edgeDetection, edgeDetectionWithGaussianBlur, gaussianBlur, gaussianBlur5x5 } from "$lib/filter";
 	import Button from "./Button.svelte";
 
     interface Props {
@@ -17,6 +17,7 @@
     <div class="buttons">
 		<Button label="Nenhum" onclick={() => close(null)}></Button>
 		<Button label="Gaussian Blur" onclick={() => close(gaussianBlur)}></Button>
+        <Button label="Gaussian Blur 5x5" onclick={() => close(gaussianBlur5x5)}></Button>
 		<Button label="Detecção de Bordas" onclick={() => close(edgeDetection)}></Button>
 		<Button label="Detecção de Bordas com Gaussian Blur" onclick={() => close(edgeDetectionWithGaussianBlur)}></Button>
     </div>
