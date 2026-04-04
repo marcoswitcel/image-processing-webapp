@@ -1,5 +1,8 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import Button from '$lib/components/Button.svelte';
+	import FilterOptionsModal from '$lib/components/FilterOptionsModal.svelte';
+	import type { FilterProcessor } from '$lib/filter';
 	import { filterSelected } from '$lib/stores/filterSelected.svelte';
 	import { Modal } from '$lib/stores/modalStore';
 	import { onDestroy, onMount } from 'svelte';
@@ -85,6 +88,7 @@
 
 				if (filterSelected.current) {
 					const imageDataIn = ctx.getImageData(0, 0, width, height);
+					// @todo João, reciclar esse buffer
 					const imageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
 	
 					filterSelected.current(imageDataIn, imageDataOut);
@@ -115,6 +119,12 @@
 
 		link.remove();
 	}
+
+	async function openFilterOption() {
+		const filter: FilterProcessor = await Modal.open(FilterOptionsModal, { close: Modal.close })
+
+		filterSelected.current = filter;
+	}
 </script>
 
 <div class="camera-view">
@@ -123,6 +133,7 @@
 	<canvas class="canvas" bind:this={canvasElement} width={innerWidth.current ?? 0} height={innerHeight.current ?? 0}></canvas>
 	<button class="floaty" type="button" title="Captura" onclick={captureAndDownload}></button>
 	<a class="link" href={resolve('/editor')} title="Editor">Editor</a>
+	<Button label="Filtros" onclick={openFilterOption}></Button>
 </div>
 
 <style>
@@ -172,5 +183,9 @@
 	.floaty:active {
 		transform: translateX(-50%) scale(.85);
 	}
-
+	:global(.camera-view > .button) {
+		position: fixed;
+		bottom: 1em;
+		right: 1em;
+	}
 </style>

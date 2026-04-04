@@ -59,23 +59,24 @@ export function makeFilter(
 	};
 }
 
+export const gaussianBlur = makeFilter([
+    [ 1/16, 1/8, 1/16 ],
+    [ 1/8 , 1/4, 1/8  ],
+    [ 1/16, 1/8, 1/16 ]
+]);
+
+
 /**
  * @todo João, pelo que vi nesse vídeo: https://www.youtube.com/watch?v=uihBwtPIBxM
  * é necessário rodar o filtro em uma imagem em tons de cinza e seria bom usar um blur antes de aplicar o detector de bordas...
  */
-
-export const filterEdgeDetection = makeFilter([
-    [-1, 0, 1],
-    [-2, 0, 2],
-    [-1, 0, 1]
-]);
 
 /**
  * @wip terminar de validar
  * @param imageDataIn 
  * @param imageDataOut 
  */
-export function filterEdgeDetectionV2(imageDataIn: ImageData, imageDataOut: ImageData) {
+export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
 	const factorsMatrix1: number[][] = [
 		[-1, 0, 1],
 		[-2, 0, 2],
@@ -96,7 +97,7 @@ export function filterEdgeDetectionV2(imageDataIn: ImageData, imageDataOut: Imag
 
 	for (let i = 0, iter = 0; i < bufferLenght; i += 4) {
 		iter = i + 1;
-		// borda azul
+		// borda preta
 		if (
 			iter < imageWidth * 4 ||
 			iter > bufferLenght - imageWidth * 4 ||
@@ -105,17 +106,19 @@ export function filterEdgeDetectionV2(imageDataIn: ImageData, imageDataOut: Imag
 		) {
 			bufferOut[i + 0] = 0;
 			bufferOut[i + 1] = 0;
-			bufferOut[i + 2] = 255;
+			bufferOut[i + 2] = 0;
 			bufferOut[i + 3] = 255;
 			continue;
 		}
 
+
+		const channel = 1; // red 0 green 1 blue 2
 		let sumR = 0;
 		for (let j = -1; j < 2; j++) {
 			for (let k = -1; k < 2; k++) {
 				const factor = factorsMatrix1[k + 1][j + 1];
 				const index = i + j * 4 + k * imageWidth * 4;
-				sumR += bufferIn[index + 0] * factor;
+				sumR += bufferIn[index + channel] * factor;
 				
 			}
 		}
@@ -127,16 +130,23 @@ export function filterEdgeDetectionV2(imageDataIn: ImageData, imageDataOut: Imag
 			for (let k = -1; k < 2; k++) {
 				const factor = factorsMatrix2[k + 1][j + 1];
 				const index = i + j * 4 + k * imageWidth * 4;
-				sumR2 += bufferIn[index + 0] * factor;
+				sumR2 += bufferIn[index + channel] * factor;
 		
 			}
 		}
 
-		bufferOut[i + 0] = Math.sqrt(sumR * sumR + sumR2 *sumR2); // R value
-		bufferOut[i + 1] = Math.sqrt(sumR * sumR + sumR2 *sumR2); // G value
-		bufferOut[i + 2] = Math.sqrt(sumR * sumR + sumR2 *sumR2); // B value
+		const result = Math.sqrt(sumR * sumR + sumR2 * sumR2);
+
+		bufferOut[i + 0] = result; // R value
+		bufferOut[i + 1] = result; // G value
+		bufferOut[i + 2] = result; // B value
 		bufferOut[i + 3] = 255; // A value
 	}
 	
 }
 
+export const edgeDetectionWithGaussianBlur: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
+	const imageDataOutTemp = new ImageData(imageDataIn.width, imageDataIn.height);
+	gaussianBlur(imageDataIn, imageDataOutTemp);
+	edgeDetection(imageDataOutTemp, imageDataOut);
+}
