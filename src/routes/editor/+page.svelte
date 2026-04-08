@@ -1,20 +1,39 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { EditableFilterNode } from '$lib/filter-graph';
+	import { EditableFilterNode } from '$lib/filter-graph/index';
 
-	const nodes: EditableFilterNode[] = [];
-	const node01 = new EditableFilterNode();
-	const node02 = new EditableFilterNode();
-	node02.x = 100;
-	nodes.push(node01);
-	nodes.push(node02);
+	const nodes: EditableFilterNode[] = $state([
+		new EditableFilterNode(),
+		new EditableFilterNode()
+	]);
+	nodes[1].x = 100;
 
-	node01.out.push(node02);
-	node02.in.push(node01);
+	nodes[0].out.push(nodes[1]);
+	nodes[1].in.push(nodes[0]);
+
 	const lines = $derived(
 		nodes.flatMap(node => node.out.map(out => [node, out] as  [EditableFilterNode, EditableFilterNode]))
 	)
 	// console.log(lines)
+
+	let offsetX = 0;
+	let offsetY = 0;
+
+	function handleMouseDown(event: MouseEvent) {
+		offsetX = event.screenX;
+		offsetY = event.screenY;
+	}
+
+	function handleMouseMove(editable: EditableFilterNode, event: MouseEvent) {
+		const deltaX = event.screenX - offsetX;
+		const deltaY = event.screenY - offsetY;
+
+		offsetX = event.screenX;
+		offsetY = event.screenY;
+
+		editable.x += deltaX;
+		editable.y += deltaY;
+	}
 </script>
 
 <div class="page">
@@ -28,7 +47,7 @@
 
 
 		{#each nodes as node (node.id)}
-			<rect x={node.x} y={node.y} width="40" height="40" />
+			<rect x={node.x} y={node.y} width="40" height="40" onmousedown={handleMouseDown} onmousemove={(event) => handleMouseMove(node, event)} />
 		{/each}
 
 	</svg>
