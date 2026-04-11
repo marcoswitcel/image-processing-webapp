@@ -7,8 +7,8 @@ export class EditableFilterNode {
     in: Array<EditableFilterNode> = [];
     out: Array<EditableFilterNode> = [];
 
-    x = 0;
-    y = 0;
+    x = $state(0);
+    y = $state(0);
 
     
 }
