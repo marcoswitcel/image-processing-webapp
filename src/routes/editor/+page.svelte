@@ -6,7 +6,7 @@
 		new EditableFilterNode(),
 		new EditableFilterNode()
 	]);
-	nodes[1].x = 100;
+	nodes[1].x = 300;
 
 	nodes[0].out.push(nodes[1]);
 	nodes[1].in.push(nodes[0]);
@@ -18,10 +18,12 @@
 	let offsetX = 0;
 	let offsetY = 0;
 	let dragging = false;
+	let editableSelected: EditableFilterNode | null = $state(null);
 
-	function handleMouseDown(event: MouseEvent) {
+	function handleMouseDown(editable: EditableFilterNode, event: MouseEvent) {
 		offsetX = event.screenX;
 		offsetY = event.screenY;
+		editableSelected = editable;
 		dragging = true;
 	}
 
@@ -29,8 +31,8 @@
 		dragging = false;
 	}
 
-	function handleMouseMove(editable: EditableFilterNode, event: MouseEvent) {
-		if (!dragging) return;
+	function handleMouseMove(event: MouseEvent) {
+		if (!dragging || editableSelected == null) return;
 		
 		const deltaX = event.screenX - offsetX;
 		const deltaY = event.screenY - offsetY;
@@ -38,23 +40,25 @@
 		offsetX = event.screenX;
 		offsetY = event.screenY;
 
-		editable.x += deltaX;
-		editable.y += deltaY;
+		editableSelected.x += deltaX;
+		editableSelected.y += deltaY;
 	}
 </script>
+
+<svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp}></svelte:window>
 
 <div class="page">
 	<h1>Editor</h1>
 	<p>Pendente implementação</p>
-	<svg viewBox="0 0 200 200">
+	<svg viewBox="0 0 600 600">
 
 		{#each lines as line (line[0].id + line[1].id )}
-			<line x1={line[0].x} y1={line[0].y} x2={line[1].x} y2={line[1].y} stroke="black" stroke-width="2" />
+			<line x1={line[0].x} y1={line[0].y} x2={line[1].x} y2={line[1].y} stroke="black" stroke-width="6" />
 		{/each}
 
 
 		{#each nodes as node (node.id)}
-			<rect x={node.x} y={node.y} width="40" height="40" onmousedown={handleMouseDown} onmouseup={handleMouseUp} onmousemove={(event) => handleMouseMove(node, event)} />
+			<rect x={node.x} y={node.y} width="100" height="100" onmousedown={(event) => handleMouseDown(node, event)} />
 		{/each}
 
 	</svg>
@@ -64,5 +68,8 @@
 <style>
 	.page {
 		padding: 1em;
+	}
+	svg {
+		width: 600px;
 	}
 </style>
