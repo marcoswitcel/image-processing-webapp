@@ -16,12 +16,9 @@
 	const lineWidth = 3;
 	const borderRadius = 6;
 
-	// @todo joão, remover esse bloco quando permitir selecionar um bloco e depois o outro para estabelecer a conexão
-	{
-		nodes[1].x = 300;
-	
-		nodes[0].out.push(nodes[1]);
-		nodes[1].in.push(nodes[0]);
+	function connect(fromNode: EditableFilterNode, toNode: EditableFilterNode) {
+		fromNode.out.push(toNode);
+		toNode.in.push(fromNode);
 	}
 
 	const lines = $derived(
@@ -31,13 +28,19 @@
 	let offsetX = 0;
 	let offsetY = 0;
 	let dragging = false;
+	let isControlPressed = false;
 	let editableSelected: EditableFilterNode | null = $state(null);
 
 	function handleMouseDown(editable: EditableFilterNode, event: MouseEvent) {
 		offsetX = event.screenX;
 		offsetY = event.screenY;
-		editableSelected = editable;
-		dragging = true;
+		
+		if (editableSelected && isControlPressed) {
+			connect(editableSelected, editable);
+		} else {
+			dragging = true;
+			editableSelected = editable;
+		}
 	}
 
 	function handleMouseUp() {
@@ -56,9 +59,28 @@
 		editableSelected.x += deltaX;
 		editableSelected.y += deltaY;
 	}
+
+	function onKeyDown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			editableSelected = null;
+		}
+		
+		if (event.key === 'Control') {
+			isControlPressed = true;
+		}
+	}
+	function onKeyUp(event: KeyboardEvent) {
+		if (event.key === 'Control') {
+			isControlPressed = false;
+		}
+	}
+	function onBlur() {
+		isControlPressed = false;
+	}
 </script>
 
 <svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp}></svelte:window>
+<svelte:document onkeydown={onKeyDown} onkeyup={onKeyUp} onblur={onBlur} ></svelte:document>
 
 <svg viewBox={viewBox}>
 
@@ -68,7 +90,7 @@
 
 
     {#each nodes as node (node.id)}
-        <rect fill="green" x={node.x} y={node.y} width="100" height="100" rx={borderRadius} ry={borderRadius} onmousedown={(event) => handleMouseDown(node, event)} />
+        <rect fill="green" data-selected={node == editableSelected} x={node.x} y={node.y} width="100" height="100" rx={borderRadius} ry={borderRadius} onmousedown={(event) => handleMouseDown(node, event)} />
     {/each}
 
 </svg>
@@ -77,5 +99,12 @@
 	svg {
 		border: 1px dotted black;
 		user-select: none;
+	}
+
+	rect:hover {
+		fill: blue;
+	}
+	rect[data-selected=true] {
+		fill: red;
 	}
 </style>

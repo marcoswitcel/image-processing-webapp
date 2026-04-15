@@ -5,10 +5,7 @@
 	import { EditableFilterNode } from '$lib/filter-graph/index.svelte';
 	import { innerHeight, innerWidth } from 'svelte/reactivity/window';
 
-	const nodes: EditableFilterNode[] = $state([
-		new EditableFilterNode(),
-		new EditableFilterNode(),
-	]);
+	const nodes: EditableFilterNode[] = $state([]);
 	
 	function add() {
 		nodes.push(new EditableFilterNode());

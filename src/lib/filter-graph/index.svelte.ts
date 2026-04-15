@@ -10,12 +10,12 @@ export class EditableFilterNode {
     /**
      * Filtros que alimentam essa etapa
      */
-    in: Array<EditableFilterNode> = [];
+    in: Array<EditableFilterNode> = $state([]);
 
     /**
      * Filtros que são alimentam por essa etapa
      */
-    out: Array<EditableFilterNode> = [];
+    out: Array<EditableFilterNode> = $state([]);
 
     /**
      * Posição visual do filtro: x
