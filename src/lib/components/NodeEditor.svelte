@@ -16,10 +16,6 @@
 	const lineWidth = 3;
 	const borderRadius = 6;
 
-	function connect(fromNode: EditableFilterNode, toNode: EditableFilterNode) {
-		fromNode.out.push(toNode);
-		toNode.in.push(fromNode);
-	}
 
 	const lines = $derived(
 		nodes.flatMap(node => node.out.map(out => [node, out] as  [EditableFilterNode, EditableFilterNode]))
@@ -36,7 +32,7 @@
 		offsetY = event.screenY;
 		
 		if (editableSelected && isControlPressed) {
-			connect(editableSelected, editable);
+			editableSelected.connect(editable);
 		} else {
 			dragging = true;
 			editableSelected = editable;
@@ -103,8 +99,10 @@
 
 	rect:hover {
 		fill: blue;
+		cursor:  grab;
 	}
 	rect[data-selected=true] {
 		fill: red;
+		cursor:  grabbing;
 	}
 </style>

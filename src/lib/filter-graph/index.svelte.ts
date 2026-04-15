@@ -28,4 +28,8 @@ export class EditableFilterNode {
     y = $state(0);
 
     
+    public connect(to: EditableFilterNode): void {
+		this.out.push(to);
+		to.in.push(this);
+	}
 }
