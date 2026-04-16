@@ -103,6 +103,7 @@
 		<rect
 			fill="green"
 			role="button"
+			data-id={node.id}
 			tabindex="-1"
 			data-selected={node == editableSelected}
 			x={node.x}
