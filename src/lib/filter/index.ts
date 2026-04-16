@@ -1,14 +1,11 @@
-
-export type FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => void; 
+export type FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => void;
 
 /**
  * Monta filtros baseados em uma matriz de pesos (convolution kernel)
  * @param convolutionKernel
  * @returns função de filtro
  */
-export function makeFilter(
-	convolutionKernel: number[][]
-): FilterProcessor {
+export function makeFilter(convolutionKernel: number[][]): FilterProcessor {
 	const factorsMatrix = convolutionKernel;
 
 	/**
@@ -59,9 +56,7 @@ export function makeFilter(
 	};
 }
 
-export function makeFilter5x5(
-	convolutionKernel: number[][]
-): FilterProcessor {
+export function makeFilter5x5(convolutionKernel: number[][]): FilterProcessor {
 	const factorsMatrix = convolutionKernel;
 
 	/**
@@ -112,11 +107,10 @@ export function makeFilter5x5(
 	};
 }
 
-
 export const gaussianBlur = makeFilter([
-    [ 1/16, 1/8, 1/16 ],
-    [ 1/8 , 1/4, 1/8  ],
-    [ 1/16, 1/8, 1/16 ]
+	[1 / 16, 1 / 8, 1 / 16],
+	[1 / 8, 1 / 4, 1 / 8],
+	[1 / 16, 1 / 8, 1 / 16]
 ]);
 
 /**
@@ -124,15 +118,12 @@ export const gaussianBlur = makeFilter([
  * @note https://dev.to/ikhwanal/gaussian-blur-4nnd
  */
 export const gaussianBlur5x5 = makeFilter5x5([
-    [ 0.0327, 0.0394, 0.0409, 0.0394, 0.0327, ],
-    [ 0.0394, 0.0456, 0.0482, 0.0456, 0.0394, ],
-    [ 0.0409, 0.0482, 0.0510, 0.0482, 0.0409, ],
-	[ 0.0394, 0.0456, 0.0482, 0.0456, 0.0394, ],
-	[ 0.0327, 0.0394, 0.0409, 0.0394, 0.0327, ],
+	[0.0327, 0.0394, 0.0409, 0.0394, 0.0327],
+	[0.0394, 0.0456, 0.0482, 0.0456, 0.0394],
+	[0.0409, 0.0482, 0.051, 0.0482, 0.0409],
+	[0.0394, 0.0456, 0.0482, 0.0456, 0.0394],
+	[0.0327, 0.0394, 0.0409, 0.0394, 0.0327]
 ]);
-
-
-
 
 /**
  * @todo João, pelo que vi nesse vídeo: https://www.youtube.com/watch?v=uihBwtPIBxM
@@ -141,8 +132,8 @@ export const gaussianBlur5x5 = makeFilter5x5([
 
 /**
  * @wip terminar de validar
- * @param imageDataIn 
- * @param imageDataOut 
+ * @param imageDataIn
+ * @param imageDataOut
  */
 export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
 	const factorsMatrix1: number[][] = [
@@ -156,7 +147,6 @@ export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageData
 		[0, 0, 0],
 		[-1, -2, -1]
 	];
-
 
 	const bufferIn = imageDataIn.data;
 	const bufferOut = imageDataOut.data;
@@ -179,7 +169,6 @@ export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageData
 			continue;
 		}
 
-
 		const channel = 1; // red 0 green 1 blue 2
 		let sumR = 0;
 		for (let j = -1; j < 2; j++) {
@@ -187,19 +176,16 @@ export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageData
 				const factor = factorsMatrix1[k + 1][j + 1];
 				const index = i + j * 4 + k * imageWidth * 4;
 				sumR += bufferIn[index + channel] * factor;
-				
 			}
 		}
 
-
 		let sumR2 = 0;
-		
+
 		for (let j = -1; j < 2; j++) {
 			for (let k = -1; k < 2; k++) {
 				const factor = factorsMatrix2[k + 1][j + 1];
 				const index = i + j * 4 + k * imageWidth * 4;
 				sumR2 += bufferIn[index + channel] * factor;
-		
 			}
 		}
 
@@ -210,11 +196,13 @@ export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageData
 		bufferOut[i + 2] = result; // B value
 		bufferOut[i + 3] = 255; // A value
 	}
-	
-}
+};
 
-export const edgeDetectionWithGaussianBlur: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
+export const edgeDetectionWithGaussianBlur: FilterProcessor = (
+	imageDataIn: ImageData,
+	imageDataOut: ImageData
+) => {
 	const imageDataOutTemp = new ImageData(imageDataIn.width, imageDataIn.height);
 	gaussianBlur(imageDataIn, imageDataOutTemp);
 	edgeDetection(imageDataOutTemp, imageDataOut);
-}
+};

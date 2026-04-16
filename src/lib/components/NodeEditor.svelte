@@ -2,12 +2,12 @@
 	import { EditableFilterNode } from '$lib/filter-graph/index.svelte';
 
 	interface Props {
-        width?: number
-		height?: number
-		nodes: EditableFilterNode[]
-    }
+		width?: number;
+		height?: number;
+		nodes: EditableFilterNode[];
+	}
 
-    const { width = 0, height = 0, nodes = $bindable() }: Props  = $props();
+	const { width = 0, height = 0, nodes = $bindable() }: Props = $props();
 	const svgOffsetX = $state(0);
 	const svgOffsetY = $state(0);
 
@@ -16,10 +16,11 @@
 	const lineWidth = 3;
 	const borderRadius = 6;
 
-
 	const lines = $derived(
-		nodes.flatMap(node => node.out.map(out => [node, out] as  [EditableFilterNode, EditableFilterNode]))
-	)
+		nodes.flatMap((node) =>
+			node.out.map((out) => [node, out] as [EditableFilterNode, EditableFilterNode])
+		)
+	);
 
 	let offsetX = 0;
 	let offsetY = 0;
@@ -30,7 +31,7 @@
 	function handleMouseDown(editable: EditableFilterNode, event: MouseEvent) {
 		offsetX = event.screenX;
 		offsetY = event.screenY;
-		
+
 		if (editableSelected && isControlPressed) {
 			editableSelected.connect(editable);
 		} else {
@@ -45,7 +46,7 @@
 
 	function handleMouseMove(event: MouseEvent) {
 		if (!dragging || editableSelected == null) return;
-		
+
 		const deltaX = event.screenX - offsetX;
 		const deltaY = event.screenY - offsetY;
 
@@ -60,7 +61,7 @@
 		if (event.key === 'Escape') {
 			editableSelected = null;
 		}
-		
+
 		if (event.key === 'Control') {
 			isControlPressed = true;
 		}
@@ -75,20 +76,34 @@
 	}
 </script>
 
-<svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp}></svelte:window>
-<svelte:document onkeydown={onKeyDown} onkeyup={onKeyUp} onblur={onBlur} ></svelte:document>
+<svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp} />
+<svelte:document onkeydown={onKeyDown} onkeyup={onKeyUp} onblur={onBlur} />
 
-<svg viewBox={viewBox}>
+<svg {viewBox}>
+	{#each lines as line (line[0].id + line[1].id)}
+		<line
+			x1={line[0].x}
+			y1={line[0].y}
+			x2={line[1].x}
+			y2={line[1].y}
+			stroke="black"
+			stroke-width={lineWidth}
+		/>
+	{/each}
 
-    {#each lines as line (line[0].id + line[1].id )}
-        <line x1={line[0].x} y1={line[0].y} x2={line[1].x} y2={line[1].y} stroke="black" stroke-width={lineWidth} />
-    {/each}
-
-
-    {#each nodes as node (node.id)}
-        <rect fill="green" data-selected={node == editableSelected} x={node.x} y={node.y} width="100" height="100" rx={borderRadius} ry={borderRadius} onmousedown={(event) => handleMouseDown(node, event)} />
-    {/each}
-
+	{#each nodes as node (node.id)}
+		<rect
+			fill="green"
+			data-selected={node == editableSelected}
+			x={node.x}
+			y={node.y}
+			width="100"
+			height="100"
+			rx={borderRadius}
+			ry={borderRadius}
+			onmousedown={(event) => handleMouseDown(node, event)}
+		/>
+	{/each}
 </svg>
 
 <style>
@@ -99,10 +114,10 @@
 
 	rect:hover {
 		fill: blue;
-		cursor:  grab;
+		cursor: grab;
 	}
-	rect[data-selected=true] {
+	rect[data-selected='true'] {
 		fill: red;
-		cursor:  grabbing;
+		cursor: grabbing;
 	}
 </style>

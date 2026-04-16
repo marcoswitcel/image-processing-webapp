@@ -30,24 +30,29 @@
 		permission.addEventListener('change', () => {
 			// @todo joão, avaliar como fazer uso desse recurso
 			console.log('permissão mudada');
-		})
+		});
 
 		if (permission.state === 'denied') {
-			Modal.alert('O app não possui acesso a câmera', 'Caso deseje usar o app será necessário liberar o acesso a câmera');
-			return
+			Modal.alert(
+				'O app não possui acesso a câmera',
+				'Caso deseje usar o app será necessário liberar o acesso a câmera'
+			);
+			return;
 		}
 
 		if (permission.state === 'prompt') {
-			const accept = await Modal.confirm('É necessário conceder acesso a câmera', 'O aplicativo irá solicitar acessoa a câmera');
-	
+			const accept = await Modal.confirm(
+				'É necessário conceder acesso a câmera',
+				'O aplicativo irá solicitar acessoa a câmera'
+			);
+
 			if (!accept) {
 				return;
 			}
 		}
 
+		const userMediaPromise = navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 
-		const userMediaPromise = navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-		
 		Modal.loading();
 
 		const stream = await userMediaPromise;
@@ -75,7 +80,7 @@
 				let dy = 0;
 
 				if (viewRatio > videoRatio) {
-					sourceWidth = mediaStreamWidth ;
+					sourceWidth = mediaStreamWidth;
 					sourceHeight = mediaStreamWidth * viewRatioInverted;
 					dy = (mediaStreamHeight - sourceHeight) / 2;
 				} else {
@@ -90,9 +95,9 @@
 					const imageDataIn = ctx.getImageData(0, 0, width, height);
 					// @todo João, reciclar esse buffer
 					const imageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
-	
+
 					filterSelected.current(imageDataIn, imageDataOut);
-	
+
 					// Desenha a nova imagem no canvas
 					ctx.putImageData(imageDataOut, 0, 0);
 				}
@@ -112,7 +117,11 @@
 		const link = document.createElement('a');
 		link.href = canvasElement.toDataURL('image/png');
 
-		const timeMark = new Date().toISOString().replace('T', '_').replace(/(:|\.)/g, '-').replace('Z', '')
+		const timeMark = new Date()
+			.toISOString()
+			.replace('T', '_')
+			.replace(/(:|\.)/g, '-')
+			.replace('Z', '');
 		link.download = `capture-${timeMark}.png`;
 
 		link.click();
@@ -121,7 +130,7 @@
 	}
 
 	async function openFilterOption() {
-		const filter: FilterProcessor = await Modal.open(FilterOptionsModal, { close: Modal.close })
+		const filter: FilterProcessor = await Modal.open(FilterOptionsModal, { close: Modal.close });
 
 		filterSelected.current = filter;
 	}
@@ -130,7 +139,12 @@
 <div class="camera-view">
 	<h1 class="title">Câmera</h1>
 	<video class="video" bind:this={videoElement}>Seu dispositivo não possue suporte a webcam</video>
-	<canvas class="canvas" bind:this={canvasElement} width={innerWidth.current ?? 0} height={innerHeight.current ?? 0}></canvas>
+	<canvas
+		class="canvas"
+		bind:this={canvasElement}
+		width={innerWidth.current ?? 0}
+		height={innerHeight.current ?? 0}
+	></canvas>
 	<button class="floaty" type="button" title="Captura" onclick={captureAndDownload}></button>
 	<a class="link" href={resolve('/editor')} title="Editor">Editor</a>
 	<Button label="Filtros" onclick={openFilterOption}></Button>
@@ -173,15 +187,15 @@
 		width: 5em;
 		height: 5em;
 		display: block;
-		background-color: rgba(0,0,0,.7);
+		background-color: rgba(0, 0, 0, 0.7);
 		border-radius: 50%;
 		border: none;
-		transition: .2s all ease-in;
+		transition: 0.2s all ease-in;
 		cursor: pointer;
 	}
 
 	.floaty:active {
-		transform: translateX(-50%) scale(.85);
+		transform: translateX(-50%) scale(0.85);
 	}
 	:global(.camera-view > .button) {
 		position: fixed;
