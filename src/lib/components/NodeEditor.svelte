@@ -34,6 +34,7 @@
 
 		if (editableSelected && isControlPressed) {
 			editableSelected.connect(editable);
+			editableSelected = null;
 		} else {
 			dragging = true;
 			editableSelected = editable;
@@ -42,6 +43,9 @@
 
 	function handleMouseUp() {
 		dragging = false;
+		if (!isControlPressed) {
+			editableSelected = null;
+		}
 	}
 
 	function handleMouseMove(event: MouseEvent) {
@@ -69,10 +73,14 @@
 	function onKeyUp(event: KeyboardEvent) {
 		if (event.key === 'Control') {
 			isControlPressed = false;
+			editableSelected = null;
+		} else if (event.code === 'KeyL') {
+			console.log(editableSelected);
 		}
 	}
 	function onBlur() {
 		isControlPressed = false;
+		editableSelected = null;
 	}
 </script>
 
@@ -94,6 +102,8 @@
 	{#each nodes as node (node.id)}
 		<rect
 			fill="green"
+			role="button"
+			tabindex="-1"
 			data-selected={node == editableSelected}
 			x={node.x}
 			y={node.y}
@@ -112,12 +122,17 @@
 		user-select: none;
 	}
 
+	rect {
+		outline: none;
+	}
+
 	rect:hover {
-		fill: blue;
+		opacity: 0.9;
 		cursor: grab;
 	}
 	rect[data-selected='true'] {
-		fill: red;
+		opacity: 0.7;
 		cursor: grabbing;
+		outline: none;
 	}
 </style>
