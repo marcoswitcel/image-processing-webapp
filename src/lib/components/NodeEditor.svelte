@@ -114,6 +114,7 @@
 			ry={borderRadius}
 			onmousedown={(event) => handleMouseDown(node, event)}
 		/>
+		<text x={node.x + 2} y={node.y + 12} font-size="14" fill="white">{node.id.slice(0, 11)}</text>
 	{/each}
 </svg>
 
