@@ -8,8 +8,8 @@
 	}
 
 	const { width = 0, height = 0, nodes = $bindable() }: Props = $props();
-	const svgOffsetX = $state(0);
-	const svgOffsetY = $state(0);
+	let svgOffsetX = $state(0);
+	let svgOffsetY = $state(0);
 
 	const viewBox = $derived(`${svgOffsetX} ${svgOffsetY} ${width} ${height}`);
 
@@ -29,6 +29,8 @@
 	let editableSelected: EditableFilterNode | null = $state(null);
 
 	function handleMouseDown(editable: EditableFilterNode, event: MouseEvent) {
+		event.stopPropagation();
+
 		offsetX = event.screenX;
 		offsetY = event.screenY;
 
@@ -49,7 +51,7 @@
 	}
 
 	function handleMouseMove(event: MouseEvent) {
-		if (!dragging || editableSelected == null) return;
+		if (!dragging) return;
 
 		const deltaX = event.screenX - offsetX;
 		const deltaY = event.screenY - offsetY;
@@ -57,8 +59,13 @@
 		offsetX = event.screenX;
 		offsetY = event.screenY;
 
-		editableSelected.x += deltaX;
-		editableSelected.y += deltaY;
+		if (editableSelected == null) {
+			svgOffsetX -= deltaX;
+			svgOffsetY -= deltaY;
+		} else {
+			editableSelected.x += deltaX;
+			editableSelected.y += deltaY;
+		}
 	}
 
 	function onKeyDown(event: KeyboardEvent) {
@@ -82,9 +89,20 @@
 		isControlPressed = false;
 		editableSelected = null;
 	}
+
+	function handleMouseDownWindow(event: MouseEvent) {
+		dragging = true;
+
+		offsetX = event.screenX;
+		offsetY = event.screenY;
+	}
 </script>
 
-<svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp} />
+<svelte:window
+	onmousemove={handleMouseMove}
+	onmouseup={handleMouseUp}
+	onmousedown={handleMouseDownWindow}
+/>
 <svelte:document onkeydown={onKeyDown} onkeyup={onKeyUp} onblur={onBlur} />
 
 <svg {viewBox}>
