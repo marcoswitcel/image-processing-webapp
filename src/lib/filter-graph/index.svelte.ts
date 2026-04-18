@@ -1,8 +1,18 @@
+/**
+ *
+ */
+export type NodeTypes = 'source' | 'output' | 'filter';
+
 export class EditableFilterNode {
 	/**
 	 * UUID
 	 */
 	id: string = crypto.randomUUID();
+
+	/**
+	 * tipo do node
+	 */
+	type: NodeTypes = 'source';
 
 	/**
 	 * Filtros que alimentam essa etapa

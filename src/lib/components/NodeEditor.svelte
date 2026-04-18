@@ -115,6 +115,8 @@
 			stroke="black"
 			stroke-width={lineWidth}
 		/>
+		<circle cx={line[0].x} cy={line[0].y} r={lineWidth * 2.5} fill="gray"></circle>
+		<circle cx={line[1].x} cy={line[1].y} r={lineWidth * 1.5} fill="gray"></circle>
 	{/each}
 
 	{#each nodes as node (node.id)}
