@@ -45,6 +45,7 @@
 
 	function handleMouseUp() {
 		dragging = false;
+		document.body.style.cursor = '';
 		if (!isControlPressed) {
 			editableSelected = null;
 		}
@@ -95,6 +96,8 @@
 
 		offsetX = event.screenX;
 		offsetY = event.screenY;
+
+		document.body.style.cursor = 'grabbing';
 	}
 </script>
 
@@ -120,22 +123,26 @@
 	{/each}
 
 	{#each nodes as node (node.id)}
-		<rect
-			fill="green"
+		<g
 			role="button"
-			data-id={node.id}
 			tabindex="-1"
-			data-selected={node == editableSelected}
-			x={node.x}
-			y={node.y}
-			width="100"
-			height="100"
-			rx={borderRadius}
-			ry={borderRadius}
 			onmousedown={(event) => handleMouseDown(node, event)}
-		/>
-		<text x={node.x + 2} y={node.y + 12} font-size="14" fill="white">{node.id.slice(0, 11)}</text>
-		<text x={node.x + 2} y={node.y + 26} font-size="14" fill="white">{node.type}</text>
+			data-id={node.id}
+		>
+			<rect
+				fill="green"
+				data-id={node.id}
+				data-selected={node == editableSelected}
+				x={node.x}
+				y={node.y}
+				width="100"
+				height="100"
+				rx={borderRadius}
+				ry={borderRadius}
+			/>
+			<text x={node.x + 2} y={node.y + 12} font-size="14" fill="white">{node.id.slice(0, 11)}</text>
+			<text x={node.x + 2} y={node.y + 26} font-size="14" fill="white">{node.type}</text>
+		</g>
 	{/each}
 </svg>
 
@@ -145,6 +152,7 @@
 		user-select: none;
 	}
 
+	g,
 	rect {
 		outline: none;
 	}
