@@ -6,9 +6,12 @@
 	import { innerHeight, innerWidth } from 'svelte/reactivity/window';
 
 	const nodes: EditableFilterNode[] = $state([]);
+	let filterNameSelected: string = $state('edge');
 
 	function add() {
-		nodes.push(new EditableFilterNode());
+		if (filterNameSelected) {
+			nodes.push(new EditableFilterNode(filterNameSelected));
+		}
 	}
 </script>
 
@@ -17,6 +20,10 @@
 	<a href={resolve('/')} title="Câmera" class="link">Voltar para a câmera</a>
 
 	<NodeEditor width={innerWidth.current} height={innerHeight.current} {nodes}></NodeEditor>
+	<select name="filters" id="filters" class="filter-selection" bind:value={filterNameSelected}>
+		<option value="edge">Detecção de Borda</option>
+		<option value="grayScale">Tons de Cinza</option>
+	</select>
 	<Button label="Adicionar Filtro" onclick={() => add()}></Button>
 </div>
 
@@ -39,6 +46,15 @@
 		left: 1em;
 		bottom: 1em;
 		user-select: none;
+	}
+	.filter-selection {
+		position: fixed;
+		right: 20em;
+		bottom: 2em;
+		padding: 1em;
+		background-color: white;
+		border-radius: 2px;
+		cursor: pointer;
 	}
 	:global(.button) {
 		position: fixed;

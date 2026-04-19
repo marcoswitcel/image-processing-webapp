@@ -15,6 +15,11 @@ export class EditableFilterNode {
 	type: NodeTypes = 'source';
 
 	/**
+	 * Nome do filtro
+	 */
+	filterName: string;
+
+	/**
 	 * Filtros que alimentam essa etapa
 	 */
 	in: Array<EditableFilterNode> = $state([]);
@@ -33,6 +38,10 @@ export class EditableFilterNode {
 	 * Posição visual do filtro: y
 	 */
 	y = $state(0);
+
+	constructor(filterName: string) {
+		this.filterName = filterName;
+	}
 
 	public connect(to: EditableFilterNode): void {
 		// Por hora um filtro só pode apontar para outro uma única vez e o filtro alvo só pode ser apontado uma vez
