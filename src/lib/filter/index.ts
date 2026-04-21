@@ -222,3 +222,12 @@ export const grayScale: FilterProcessor = (imageDataIn: ImageData, imageDataOut:
 		bufferOut[i + 3] = 255; // A value
 	}
 };
+
+export const combinationTestFilter: FilterProcessor = (
+	imageDataIn: ImageData,
+	imageDataOut: ImageData
+) => {
+	const imageDataOutTemp = new ImageData(imageDataIn.width, imageDataIn.height);
+	grayScale(imageDataIn, imageDataOutTemp);
+	edgeDetection(imageDataOutTemp, imageDataOut);
+};
