@@ -206,3 +206,19 @@ export const edgeDetectionWithGaussianBlur: FilterProcessor = (
 	gaussianBlur(imageDataIn, imageDataOutTemp);
 	edgeDetection(imageDataOutTemp, imageDataOut);
 };
+
+export const grayScale: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
+	const bufferIn = imageDataIn.data;
+	const bufferOut = imageDataOut.data;
+
+	const bufferLenght = bufferIn.length;
+
+	for (let i = 0; i < bufferLenght; i += 4) {
+		const green = bufferIn[i + 1]; // green
+
+		bufferOut[i + 0] = green; // R value
+		bufferOut[i + 1] = green; // G value
+		bufferOut[i + 2] = green; // B value
+		bufferOut[i + 3] = 255; // A value
+	}
+};

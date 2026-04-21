@@ -3,7 +3,8 @@
 		edgeDetection,
 		edgeDetectionWithGaussianBlur,
 		gaussianBlur,
-		gaussianBlur5x5
+		gaussianBlur5x5,
+		grayScale
 	} from '$lib/filter';
 	import Button from './Button.svelte';
 
@@ -21,6 +22,7 @@
 		<Button label="Nenhum" onclick={() => close(null)}></Button>
 		<Button label="Gaussian Blur" onclick={() => close(gaussianBlur)}></Button>
 		<Button label="Gaussian Blur 5x5" onclick={() => close(gaussianBlur5x5)}></Button>
+		<Button label="Tons de Cinza" onclick={() => close(grayScale)}></Button>
 		<Button label="Detecção de Bordas" onclick={() => close(edgeDetection)}></Button>
 		<Button
 			label="Detecção de Bordas com Gaussian Blur"
