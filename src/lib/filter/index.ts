@@ -207,6 +207,20 @@ export const edgeDetectionWithGaussianBlur: FilterProcessor = (
 	edgeDetection(imageDataOutTemp, imageDataOut);
 };
 
+export const invertFilter: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
+	const bufferIn = imageDataIn.data;
+	const bufferOut = imageDataOut.data;
+
+	const bufferLenght = bufferIn.length;
+
+	for (let i = 0; i < bufferLenght; i += 4) {
+		bufferOut[i + 0] = bufferIn[i + 0] * -1 + 255; // R value
+		bufferOut[i + 1] = bufferIn[i + 1] * -1 + 255; // G value
+		bufferOut[i + 2] = bufferIn[i + 2] * -1 + 255; // B value
+		bufferOut[i + 3] = 255; // A value
+	}
+};
+
 export const grayScale: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
 	const bufferIn = imageDataIn.data;
 	const bufferOut = imageDataOut.data;
@@ -223,11 +237,22 @@ export const grayScale: FilterProcessor = (imageDataIn: ImageData, imageDataOut:
 	}
 };
 
-export const combinationTestFilter: FilterProcessor = (
-	imageDataIn: ImageData,
-	imageDataOut: ImageData
-) => {
-	const imageDataOutTemp = new ImageData(imageDataIn.width, imageDataIn.height);
-	grayScale(imageDataIn, imageDataOutTemp);
-	edgeDetection(imageDataOutTemp, imageDataOut);
+const makeFilterOutOfChain = (chain: FilterProcessor[]): FilterProcessor => {
+	return (imageDataIn: ImageData, imageDataOut: ImageData) => {
+		let tempImageDataIn = new ImageData(
+			new Uint8ClampedArray(imageDataIn.data),
+			imageDataIn.width,
+			imageDataIn.height
+		);
+		let tempImageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
+
+		for (let i = 0; i < chain.length; i++) {
+			const filter = chain[i];
+			filter(tempImageDataIn, i === chain.length - 1 ? imageDataOut : tempImageDataOut);
+			// swap
+			[tempImageDataIn, tempImageDataOut] = [tempImageDataOut, tempImageDataIn];
+		}
+	};
 };
+
+export const combinationTestFilter = makeFilterOutOfChain([edgeDetection, invertFilter]);

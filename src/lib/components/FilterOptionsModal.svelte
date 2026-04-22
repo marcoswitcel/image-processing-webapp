@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		combinationTestFilter,
 		edgeDetection,
 		edgeDetectionWithGaussianBlur,
 		gaussianBlur,
@@ -28,6 +29,7 @@
 			label="Detecção de Bordas com Gaussian Blur"
 			onclick={() => close(edgeDetectionWithGaussianBlur)}
 		></Button>
+		<Button label="Teste de combinação" onclick={() => close(combinationTestFilter)}></Button>
 	</div>
 </div>
 
