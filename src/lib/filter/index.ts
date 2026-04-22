@@ -213,6 +213,7 @@ export const invertFilter: FilterProcessor = (imageDataIn: ImageData, imageDataO
 
 	const bufferLenght = bufferIn.length;
 
+	// @todo João, implementar o blending para as linhas pretas ficarem por cima da foto
 	for (let i = 0; i < bufferLenght; i += 4) {
 		bufferOut[i + 0] = bufferIn[i + 0] * -1 + 255; // R value
 		bufferOut[i + 1] = bufferIn[i + 1] * -1 + 255; // G value
