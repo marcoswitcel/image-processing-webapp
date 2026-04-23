@@ -23,6 +23,8 @@
 	<select name="filters" id="filters" class="filter-selection" bind:value={filterNameSelected}>
 		<option value="edge">Detecção de Borda</option>
 		<option value="grayScale">Tons de Cinza</option>
+		<option value="webcam">Webcam</option>
+		<option value="ouput">Saída</option>
 	</select>
 	<Button label="Adicionar Filtro" onclick={() => add()}></Button>
 </div>

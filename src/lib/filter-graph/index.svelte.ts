@@ -20,6 +20,16 @@ export class EditableFilterNode {
 	filterName: string;
 
 	/**
+	 * Indica se é multi-input
+	 */
+	multiInput: boolean = false;
+
+	/**
+	 * Indica se o output dessa camada precisa de blending, ou sai pronto para envio para próxima etapa
+	 */
+	needsBlending: boolean = false;
+
+	/**
 	 * Filtros que alimentam essa etapa
 	 */
 	in: Array<EditableFilterNode> = $state([]);

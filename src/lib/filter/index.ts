@@ -169,6 +169,7 @@ export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageData
 			continue;
 		}
 
+		// @todo João, considerar como integrar o "luma gray scale" aqui...
 		const channel = 1; // red 0 green 1 blue 2
 		let sumR = 0;
 		for (let j = -1; j < 2; j++) {
