@@ -238,6 +238,25 @@ export const grayScale: FilterProcessor = (imageDataIn: ImageData, imageDataOut:
 	}
 };
 
+export const luminanceGrayScale: FilterProcessor = (
+	imageDataIn: ImageData,
+	imageDataOut: ImageData
+) => {
+	const bufferIn = imageDataIn.data;
+	const bufferOut = imageDataOut.data;
+
+	const bufferLenght = bufferIn.length;
+
+	for (let i = 0; i < bufferLenght; i += 4) {
+		const color = bufferIn[i + 0] * 0.299 + bufferIn[i + 1] * 0.587 + bufferIn[i + 2] * 0.114;
+
+		bufferOut[i + 0] = color; // R value
+		bufferOut[i + 1] = color; // G value
+		bufferOut[i + 2] = color; // B value
+		bufferOut[i + 3] = 255; // A value
+	}
+};
+
 const makeFilterOutOfChain = (chain: FilterProcessor[]): FilterProcessor => {
 	return (imageDataIn: ImageData, imageDataOut: ImageData) => {
 		let tempImageDataIn = new ImageData(
