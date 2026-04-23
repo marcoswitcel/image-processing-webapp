@@ -1,4 +1,5 @@
 export type FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => void;
+export type TemporalFilterProcessor = (imageDataIn: ImageData[], imageDataOut: ImageData) => void;
 
 /**
  * Monta filtros baseados em uma matriz de pesos (convolution kernel)
@@ -274,6 +275,42 @@ const makeFilterOutOfChain = (chain: FilterProcessor[]): FilterProcessor => {
 			[tempImageDataIn, tempImageDataOut] = [tempImageDataOut, tempImageDataIn];
 		}
 	};
+};
+
+/**
+ * @todo João, integrar e testar
+ * @param frames
+ * @param imageDataOut
+ */
+export const temporalDenoising: TemporalFilterProcessor = (
+	frames: ImageData[],
+	imageDataOut: ImageData
+) => {
+	const numberOfFrames = frames.length;
+	const bufferOut = imageDataOut.data;
+	const tempOutput = new Float64Array(bufferOut.length);
+	// no mínimo um frame deve existir
+	const bufferLenght = frames[0].data.length;
+
+	for (const frame of frames) {
+		const bufferIn = frame.data;
+		const bufferLenght = bufferIn.length;
+
+		for (let i = 0; i < bufferLenght; i += 4) {
+			tempOutput[i + 0] += bufferIn[i + 0]; // R value
+			tempOutput[i + 1] += bufferIn[i + 1]; // G value
+			tempOutput[i + 2] += bufferIn[i + 2]; // B value
+			// pula alfa
+		}
+	}
+
+	// clamping e divisão
+	for (let i = 0; i < bufferLenght; i += 4) {
+		bufferOut[i + 0] = tempOutput[i + 0] / numberOfFrames; // R value
+		bufferOut[i + 1] = tempOutput[i + 1] / numberOfFrames; // G value
+		bufferOut[i + 2] = tempOutput[i + 2] / numberOfFrames; // B value
+		bufferOut[i + 3] = 255; // A value
+	}
 };
 
 export const combinationTestFilter = makeFilterOutOfChain([edgeDetection, invertFilter]);
