@@ -15,6 +15,7 @@
 	let mediaStreamHeight = 0;
 
 	let onFrameHandle = 0;
+	const frames: ImageData[] = [];
 
 	// @todo João botão de trocar câmera frontal e trazeira
 
@@ -93,6 +94,11 @@
 
 				if (filterSelected.current) {
 					const imageDataIn = ctx.getImageData(0, 0, width, height);
+
+					// salvando frames
+					frames.push(imageDataIn);
+					if (frames.length > 5) frames.shift();
+
 					// @todo João, reciclar esse buffer
 					const imageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
 
