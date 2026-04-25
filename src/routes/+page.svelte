@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import Button from '$lib/components/Button.svelte';
 	import FilterOptionsModal from '$lib/components/FilterOptionsModal.svelte';
-	import type { FilterProcessor } from '$lib/filter';
+	import { type FilterProcessor } from '$lib/filter';
 	import { filterSelected } from '$lib/stores/filterSelected.svelte';
 	import { Modal } from '$lib/stores/modalStore';
 	import { onDestroy, onMount } from 'svelte';
@@ -16,6 +16,10 @@
 
 	let onFrameHandle = 0;
 	const frames: ImageData[] = [];
+	/**
+	 * Quanto mais samples mais "lag" visual terá, com dois frames já dá resultado
+	 */
+	const temporalFramesSample = 3;
 
 	// @todo João botão de trocar câmera frontal e trazeira
 
@@ -97,7 +101,7 @@
 
 					// salvando frames
 					frames.push(imageDataIn);
-					if (frames.length > 5) frames.shift();
+					if (frames.length > temporalFramesSample) frames.shift();
 
 					// @todo João, reciclar esse buffer
 					const imageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
