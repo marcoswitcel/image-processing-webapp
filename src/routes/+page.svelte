@@ -19,7 +19,7 @@
 	/**
 	 * Quanto mais samples mais "lag" visual terá, com dois frames já dá resultado
 	 */
-	const temporalFramesSample = 3;
+	const temporalFramesSample = 2;
 
 	// @todo João botão de trocar câmera frontal e trazeira
 
@@ -106,7 +106,7 @@
 					// @todo João, reciclar esse buffer
 					const imageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
 
-					filterSelected.current(imageDataIn, imageDataOut);
+					filterSelected.current(frames.toReversed(), imageDataOut);
 
 					// Desenha a nova imagem no canvas
 					ctx.putImageData(imageDataOut, 0, 0);

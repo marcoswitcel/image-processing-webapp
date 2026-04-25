@@ -1,5 +1,9 @@
-export type FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => void;
-export type TemporalFilterProcessor = (imageDataIn: ImageData[], imageDataOut: ImageData) => void;
+/**
+ * Interface das funções de processamento
+ * @note Por hora decidi manter as funções que operam em múltiplos frames integrada
+ * as funções que operam apenas no último frame
+ */
+export type FilterProcessor = (imageDataIn: ImageData[], imageDataOut: ImageData) => void;
 
 /**
  * Monta filtros baseados em uma matriz de pesos (convolution kernel)
@@ -14,7 +18,7 @@ export function makeFilter(convolutionKernel: number[][]): FilterProcessor {
 	 * @param imageDataOut
 	 * @return
 	 */
-	return function filter(imageDataIn: ImageData, imageDataOut: ImageData): void {
+	return function filter([imageDataIn]: ImageData[], imageDataOut: ImageData): void {
 		const bufferIn = imageDataIn.data;
 		const bufferOut = imageDataOut.data;
 		const imageWidth = imageDataIn.width;
@@ -65,7 +69,7 @@ export function makeFilter5x5(convolutionKernel: number[][]): FilterProcessor {
 	 * @param imageDataOut
 	 * @return
 	 */
-	return function filter(imageDataIn: ImageData, imageDataOut: ImageData): void {
+	return function filter([imageDataIn]: ImageData[], imageDataOut: ImageData): void {
 		const bufferIn = imageDataIn.data;
 		const bufferOut = imageDataOut.data;
 		const imageWidth = imageDataIn.width;
@@ -136,7 +140,10 @@ export const gaussianBlur5x5 = makeFilter5x5([
  * @param imageDataIn
  * @param imageDataOut
  */
-export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
+export const edgeDetection: FilterProcessor = (
+	[imageDataIn]: ImageData[],
+	imageDataOut: ImageData
+) => {
 	const factorsMatrix1: number[][] = [
 		[-1, 0, 1],
 		[-2, 0, 2],
@@ -201,15 +208,18 @@ export const edgeDetection: FilterProcessor = (imageDataIn: ImageData, imageData
 };
 
 export const edgeDetectionWithGaussianBlur: FilterProcessor = (
-	imageDataIn: ImageData,
+	[imageDataIn]: ImageData[],
 	imageDataOut: ImageData
 ) => {
 	const imageDataOutTemp = new ImageData(imageDataIn.width, imageDataIn.height);
-	gaussianBlur(imageDataIn, imageDataOutTemp);
-	edgeDetection(imageDataOutTemp, imageDataOut);
+	gaussianBlur([imageDataIn], imageDataOutTemp);
+	edgeDetection([imageDataOutTemp], imageDataOut);
 };
 
-export const invertFilter: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
+export const invertFilter: FilterProcessor = (
+	[imageDataIn]: ImageData[],
+	imageDataOut: ImageData
+) => {
 	const bufferIn = imageDataIn.data;
 	const bufferOut = imageDataOut.data;
 
@@ -224,7 +234,7 @@ export const invertFilter: FilterProcessor = (imageDataIn: ImageData, imageDataO
 	}
 };
 
-export const grayScale: FilterProcessor = (imageDataIn: ImageData, imageDataOut: ImageData) => {
+export const grayScale: FilterProcessor = ([imageDataIn]: ImageData[], imageDataOut: ImageData) => {
 	const bufferIn = imageDataIn.data;
 	const bufferOut = imageDataOut.data;
 
@@ -241,7 +251,7 @@ export const grayScale: FilterProcessor = (imageDataIn: ImageData, imageDataOut:
 };
 
 export const luminanceGrayScale: FilterProcessor = (
-	imageDataIn: ImageData,
+	[imageDataIn]: ImageData[],
 	imageDataOut: ImageData
 ) => {
 	const bufferIn = imageDataIn.data;
@@ -260,7 +270,9 @@ export const luminanceGrayScale: FilterProcessor = (
 };
 
 const makeFilterOutOfChain = (chain: FilterProcessor[]): FilterProcessor => {
-	return (imageDataIn: ImageData, imageDataOut: ImageData) => {
+	return (frames: ImageData[], imageDataOut: ImageData) => {
+		const imageDataIn = frames[0];
+		const framesLocal = [...frames];
 		let tempImageDataIn = new ImageData(
 			new Uint8ClampedArray(imageDataIn.data),
 			imageDataIn.width,
@@ -269,8 +281,9 @@ const makeFilterOutOfChain = (chain: FilterProcessor[]): FilterProcessor => {
 		let tempImageDataOut = new ImageData(imageDataIn.width, imageDataIn.height);
 
 		for (let i = 0; i < chain.length; i++) {
+			framesLocal[0] = tempImageDataIn;
 			const filter = chain[i];
-			filter(tempImageDataIn, i === chain.length - 1 ? imageDataOut : tempImageDataOut);
+			filter(framesLocal, i === chain.length - 1 ? imageDataOut : tempImageDataOut);
 			// swap
 			[tempImageDataIn, tempImageDataOut] = [tempImageDataOut, tempImageDataIn];
 		}
@@ -282,7 +295,7 @@ const makeFilterOutOfChain = (chain: FilterProcessor[]): FilterProcessor => {
  * @param frames
  * @param imageDataOut
  */
-export const temporalDenoising: TemporalFilterProcessor = (
+export const temporalDenoising: FilterProcessor = (
 	frames: ImageData[],
 	imageDataOut: ImageData
 ) => {
@@ -313,4 +326,8 @@ export const temporalDenoising: TemporalFilterProcessor = (
 	}
 };
 
-export const combinationTestFilter = makeFilterOutOfChain([edgeDetection, invertFilter]);
+export const combinationTestFilter = makeFilterOutOfChain([
+	temporalDenoising,
+	edgeDetection,
+	invertFilter
+]);
