@@ -131,8 +131,8 @@ export const gaussianBlur5x5 = makeFilter5x5([
 ]);
 
 /**
- * @todo João, pelo que vi nesse vídeo: https://www.youtube.com/watch?v=uihBwtPIBxM
- * é necessário rodar o filtro em uma imagem em tons de cinza e seria bom usar um blur antes de aplicar o detector de bordas...
+ * @url https://www.youtube.com/watch?v=uihBwtPIBxM
+ * @note É necessário rodar o filtro em uma imagem em tons de cinza e seria bom usar um blur antes de aplicar o detector de bordas...
  */
 
 /**
@@ -177,7 +177,9 @@ export const edgeDetection: FilterProcessor = (
 			continue;
 		}
 
-		// @todo João, considerar como integrar o "luma gray scale" aqui...
+		// @note geralmente a imagem deve ter sido processada antes de chegar aqui,
+		// então todos os canais teriam o mesmo valor. Assim é possível deixar a etapa de
+		// converção pra "preto e branco" separada.
 		const channel = 1; // red 0 green 1 blue 2
 		let sumR = 0;
 		for (let j = -1; j < 2; j++) {
@@ -291,7 +293,7 @@ const makeFilterOutOfChain = (chain: FilterProcessor[]): FilterProcessor => {
 };
 
 /**
- * @todo João, integrar e testar
+ *
  * @param frames
  * @param imageDataOut
  */
