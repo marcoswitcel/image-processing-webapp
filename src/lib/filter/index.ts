@@ -328,6 +328,7 @@ export const temporalDenoising: FilterProcessor = (
 
 export const combinationTestFilter = makeFilterOutOfChain([
 	temporalDenoising,
+	luminanceGrayScale,
 	edgeDetection,
 	invertFilter
 ]);
