@@ -1,13 +1,5 @@
 <script lang="ts">
-	import {
-		combinationTestFilter,
-		edgeDetection,
-		edgeDetectionWithGaussianBlur,
-		gaussianBlur,
-		gaussianBlur5x5,
-		grayScale,
-		luminanceGrayScale
-	} from '$lib/filter';
+	import { filterLabels } from '$lib/filter';
 	import Button from './Button.svelte';
 
 	interface Props {
@@ -22,16 +14,9 @@
 
 	<div class="buttons">
 		<Button label="Nenhum" onclick={() => close(null)}></Button>
-		<Button label="Gaussian Blur" onclick={() => close(gaussianBlur)}></Button>
-		<Button label="Gaussian Blur 5x5" onclick={() => close(gaussianBlur5x5)}></Button>
-		<Button label="Tons de Cinza" onclick={() => close(grayScale)}></Button>
-		<Button label="Tons de Cinza / Luminance" onclick={() => close(luminanceGrayScale)}></Button>
-		<Button label="Detecção de Bordas" onclick={() => close(edgeDetection)}></Button>
-		<Button
-			label="Detecção de Bordas com Gaussian Blur"
-			onclick={() => close(edgeDetectionWithGaussianBlur)}
-		></Button>
-		<Button label="Teste de combinação" onclick={() => close(combinationTestFilter)}></Button>
+		{#each Object.entries(filterLabels) as [key, filterProcessor] (key)}
+			<Button label={key} onclick={() => close(filterProcessor)}></Button>
+		{/each}
 	</div>
 </div>
 

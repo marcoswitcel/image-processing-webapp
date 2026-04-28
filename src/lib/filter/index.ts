@@ -334,3 +334,16 @@ export const combinationTestFilter = makeFilterOutOfChain([
 	edgeDetection,
 	invertFilter
 ]);
+
+export const filterLabels = {
+	'Gaussian Blur': gaussianBlur,
+	'Gaussian Blur 5x5': gaussianBlur5x5,
+	'Tons de Cinza': grayScale,
+	'Tons de Cinza / Luminance': luminanceGrayScale,
+	'Detecção de Bordas': edgeDetection,
+	'Detecção de Bordas com Gaussian Blur': edgeDetectionWithGaussianBlur,
+	'Teste de combinação': combinationTestFilter
+};
+
+// @ts-expect-error exportando filtros
+window['filterLabels'] = filterLabels;
