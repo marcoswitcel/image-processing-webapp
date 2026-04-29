@@ -21,6 +21,10 @@
 	 */
 	const temporalFramesSample = 2;
 
+	const searchParams = new URLSearchParams(location.search);
+	let debug = searchParams.get('debug')?.trim() === '1';
+	let fps = 60;
+
 	// @todo João botão de trocar câmera frontal e trazeira
 
 	onMount(async () => {
@@ -96,6 +100,7 @@
 
 				ctx.drawImage(videoElement, dx, dy, sourceWidth, sourceHeight, 0, 0, width, height);
 
+				const time = Date.now();
 				if (filterSelected.current) {
 					const imageDataIn = ctx.getImageData(0, 0, width, height);
 
@@ -110,6 +115,19 @@
 
 					// Desenha a nova imagem no canvas
 					ctx.putImageData(imageDataOut, 0, 0);
+				}
+
+				if (debug) {
+					ctx.font = '24px monospace';
+					ctx.fillStyle = 'red';
+
+					if (filterSelected.current) {
+						const timeEnd = Date.now();
+						fps = 1000 / (timeEnd - time);
+						ctx.fillText(`FPS: ${fps.toFixed(2)}`, 10, 50);
+					} else {
+						ctx.fillText(`FPS: auto`, 10, 50);
+					}
 				}
 			}
 
