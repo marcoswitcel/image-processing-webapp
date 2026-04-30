@@ -236,6 +236,24 @@ export const invertFilter: FilterProcessor = (
 	}
 };
 
+export const toAlphaFilter: FilterProcessor = (
+	[imageDataIn]: ImageData[],
+	imageDataOut: ImageData
+) => {
+	const bufferIn = imageDataIn.data;
+	const bufferOut = imageDataOut.data;
+
+	const bufferLenght = bufferIn.length;
+
+	// @todo João, implementar o blending para as linhas pretas ficarem por cima da foto
+	for (let i = 0; i < bufferLenght; i += 4) {
+		bufferOut[i + 0] = bufferIn[i + 0] * -1 + 255; // R value
+		bufferOut[i + 1] = bufferIn[i + 1] * -1 + 255; // G value
+		bufferOut[i + 2] = bufferIn[i + 2] * -1 + 255; // B value
+		bufferOut[i + 3] = bufferIn[i + 2]; // A value
+	}
+};
+
 export const grayScale: FilterProcessor = ([imageDataIn]: ImageData[], imageDataOut: ImageData) => {
 	const bufferIn = imageDataIn.data;
 	const bufferOut = imageDataOut.data;
@@ -324,6 +342,32 @@ export const temporalDenoising: FilterProcessor = (
 		bufferOut[i + 0] = tempOutput[i + 0] / numberOfFrames; // R value
 		bufferOut[i + 1] = tempOutput[i + 1] / numberOfFrames; // G value
 		bufferOut[i + 2] = tempOutput[i + 2] / numberOfFrames; // B value
+		bufferOut[i + 3] = 255; // A value
+	}
+};
+
+/**
+ * @todo joão, integrar e testar
+ * @param param0
+ * @param imageDataOut
+ */
+export const blend: FilterProcessor = (
+	[imageDataIn1, imageDataIn2]: ImageData[],
+	imageDataOut: ImageData
+) => {
+	const bufferIn = imageDataIn1.data;
+	const bufferIn2 = imageDataIn2.data;
+	const bufferOut = imageDataOut.data;
+
+	const bufferLenght = bufferIn.length;
+
+	for (let i = 0; i < bufferLenght; i += 4) {
+		const alpha = bufferIn2[i + 3] / 255;
+		const invAlpha = 1 - alpha;
+
+		bufferOut[i + 0] = bufferIn[i + 0] * invAlpha + bufferIn2[i + 0] * alpha; // R value
+		bufferOut[i + 1] = bufferIn[i + 1] * invAlpha + bufferIn2[i + 1] * alpha; // G value
+		bufferOut[i + 2] = bufferIn[i + 2] * invAlpha + bufferIn2[i + 2] * alpha; // B value
 		bufferOut[i + 3] = 255; // A value
 	}
 };
