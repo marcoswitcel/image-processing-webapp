@@ -389,5 +389,32 @@ export const filterLabels = Object.freeze({
 	'Teste de combinação': combinationTestFilter
 });
 
+export class FilterInfo {
+	filterName: string;
+	description: string;
+	multiFrame: boolean;
+	multiInput: boolean;
+	processing: FilterProcessor;
+
+	constructor(
+		filterName: string,
+		description: string,
+		multiFrame: boolean,
+		multiInput: boolean,
+		processing: FilterProcessor
+	) {
+		this.filterName = filterName;
+		this.description = description;
+		this.multiFrame = multiFrame;
+		this.multiInput = multiInput;
+		this.processing = processing;
+	}
+}
+
+export const infos: FilterInfo[] = [
+	new FilterInfo('Gaussian Blur (3x3)', 'Gaussian Blur de 3 por 3', false, false, gaussianBlur),
+	new FilterInfo('Gaussian Blur (5x5)', 'Gaussian Blur de 5 por 5', false, false, gaussianBlur5x5)
+];
+
 // @ts-expect-error exportando filtros
 window['filterLabels'] = filterLabels;
