@@ -379,16 +379,6 @@ export const combinationTestFilter = makeFilterOutOfChain([
 	invertFilter
 ]);
 
-export const filterLabels = Object.freeze({
-	'Gaussian Blur': gaussianBlur,
-	'Gaussian Blur 5x5': gaussianBlur5x5,
-	'Tons de Cinza': grayScale,
-	'Tons de Cinza / Luminance': luminanceGrayScale,
-	'Detecção de Bordas': edgeDetection,
-	'Detecção de Bordas com Gaussian Blur': edgeDetectionWithGaussianBlur,
-	'Teste de combinação': combinationTestFilter
-});
-
 export class FilterInfo {
 	filterName: string;
 	description: string;
@@ -411,10 +401,27 @@ export class FilterInfo {
 	}
 }
 
-export const infos: FilterInfo[] = [
+export const filtersInfo: FilterInfo[] = [
 	new FilterInfo('Gaussian Blur (3x3)', 'Gaussian Blur de 3 por 3', false, false, gaussianBlur),
-	new FilterInfo('Gaussian Blur (5x5)', 'Gaussian Blur de 5 por 5', false, false, gaussianBlur5x5)
+	new FilterInfo('Gaussian Blur (5x5)', 'Gaussian Blur de 5 por 5', false, false, gaussianBlur5x5),
+	new FilterInfo('Tons de Cinza', 'Tons de Cinza', false, false, grayScale),
+	new FilterInfo(
+		'Tons de Cinza / Luminance',
+		'Tons de Cinza / Luminance',
+		false,
+		false,
+		luminanceGrayScale
+	),
+	new FilterInfo('Detecção de Bordas', '', false, false, edgeDetection),
+	new FilterInfo(
+		'Detecção de Bordas com Gaussian Blur',
+		'Detecção de Bordas com Gaussian Blur',
+		false,
+		false,
+		edgeDetectionWithGaussianBlur
+	),
+	new FilterInfo('Teste de combinação', 'Teste de combinação', false, false, combinationTestFilter)
 ];
 
 // @ts-expect-error exportando filtros
-window['filterLabels'] = filterLabels;
+window['filtersInfo'] = filtersInfo;

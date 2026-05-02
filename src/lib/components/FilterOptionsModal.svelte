@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { filterLabels } from '$lib/filter';
+	import { filtersInfo } from '$lib/filter';
 	import Button from './Button.svelte';
 
 	interface Props {
@@ -14,8 +14,8 @@
 
 	<div class="buttons">
 		<Button label="Nenhum" onclick={() => close(null)}></Button>
-		{#each Object.entries(filterLabels) as [key, filterProcessor] (key)}
-			<Button label={key} onclick={() => close(filterProcessor)}></Button>
+		{#each filtersInfo as filter (filter.filterName)}
+			<Button label={filter.filterName} onclick={() => close(filter.processing)}></Button>
 		{/each}
 	</div>
 </div>
