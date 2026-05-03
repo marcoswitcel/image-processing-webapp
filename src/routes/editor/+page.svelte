@@ -13,6 +13,9 @@
 			nodes.push(new EditableFilterNode(filterNameSelected));
 		}
 	}
+
+	// @todo João, pensar em como vincular essas duas janelas
+	// window.open(resolve('/'), 'View', 'width=600,height=400');
 </script>
 
 <div class="page">

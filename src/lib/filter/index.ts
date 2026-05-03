@@ -236,7 +236,7 @@ export const invertFilter: FilterProcessor = (
 	}
 };
 
-export const toAlphaFilter: FilterProcessor = (
+export const blackAndWhiteToAlphaFilter: FilterProcessor = (
 	[imageDataIn]: ImageData[],
 	imageDataOut: ImageData
 ) => {
@@ -372,12 +372,24 @@ export const blend: FilterProcessor = (
 	}
 };
 
-export const combinationTestFilter = makeFilterOutOfChain([
-	temporalDenoising,
-	luminanceGrayScale,
-	edgeDetection,
-	invertFilter
-]);
+export const combinationTestFilter: FilterProcessor = (
+	frames: ImageData[],
+	imageDataOut: ImageData
+) => {
+	const imageDataIn = frames[0];
+
+	const pipeline = makeFilterOutOfChain([
+		temporalDenoising,
+		luminanceGrayScale,
+		edgeDetection,
+		blackAndWhiteToAlphaFilter
+	]);
+
+	const imageDataTemp = new ImageData(imageDataIn.width, imageDataIn.height);
+	pipeline(frames, imageDataTemp);
+
+	blend([imageDataIn, imageDataTemp], imageDataOut);
+};
 
 export class FilterInfo {
 	filterName: string;
