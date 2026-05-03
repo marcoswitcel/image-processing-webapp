@@ -58,7 +58,7 @@
 		border-radius: 2px;
 		cursor: pointer;
 	}
-	:global(.button) {
+	:global(.page .button) {
 		position: fixed;
 		right: 1em;
 		bottom: 1em;
