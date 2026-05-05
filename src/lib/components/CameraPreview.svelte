@@ -2,7 +2,13 @@
 	import { filterSelected } from '$lib/stores/filterSelected.svelte';
 	import { Modal } from '$lib/stores/modalStore';
 	import { onDestroy, onMount } from 'svelte';
-	import { innerWidth, innerHeight } from 'svelte/reactivity/window';
+
+	interface Props {
+		innerWidth?: number;
+		innerHeight?: number;
+	}
+
+	const { innerWidth = $bindable(), innerHeight = $bindable() }: Props = $props();
 
 	let canvasElement: HTMLCanvasElement | null = null;
 	let videoElement: HTMLVideoElement | null = null;
@@ -72,8 +78,8 @@
 		videoElement.play();
 
 		onFrameHandle = requestAnimationFrame(function onFrame() {
-			const width = innerWidth.current ?? 0;
-			const height = innerHeight.current ?? 0;
+			const width = innerWidth ?? 0;
+			const height = innerHeight ?? 0;
 
 			if (videoElement) {
 				const viewRatio = width / height;
@@ -136,14 +142,10 @@
 	});
 </script>
 
-<div class="camera-view">
+<div class="camera-view" style={`width: ${innerWidth}px; height: ${innerHeight}px `}>
 	<h1 class="title">Preview</h1>
 	<video class="video" bind:this={videoElement}>Seu dispositivo não possue suporte a webcam</video>
-	<canvas
-		class="canvas"
-		bind:this={canvasElement}
-		width={innerWidth.current ?? 0}
-		height={innerHeight.current ?? 0}
+	<canvas class="canvas" bind:this={canvasElement} width={innerWidth ?? 0} height={innerHeight ?? 0}
 	></canvas>
 </div>
 

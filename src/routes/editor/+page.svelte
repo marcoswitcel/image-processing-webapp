@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import Button from '$lib/components/Button.svelte';
+	import CameraPreview from '$lib/components/CameraPreview.svelte';
 	import NodeEditor from '$lib/components/NodeEditor.svelte';
 	import { EditableFilterNode } from '$lib/filter-graph/index.svelte';
 	import { innerHeight, innerWidth } from 'svelte/reactivity/window';
@@ -30,6 +31,10 @@
 		<option value="ouput">Saída</option>
 	</select>
 	<Button label="Adicionar Filtro" onclick={() => add()}></Button>
+	<CameraPreview
+		innerWidth={(innerWidth.current ?? 0) * 0.5}
+		innerHeight={(innerWidth.current ?? 0) * 0.35}
+	></CameraPreview>
 </div>
 
 <style>
@@ -65,5 +70,10 @@
 		position: fixed;
 		right: 1em;
 		bottom: 1em;
+	}
+	:global(.page .camera-view) {
+		position: fixed;
+		right: 0;
+		top: 0;
 	}
 </style>
