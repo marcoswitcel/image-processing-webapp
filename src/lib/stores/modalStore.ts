@@ -7,6 +7,7 @@ import { writable } from 'svelte/store';
 export interface ModalState {
 	isOpen: boolean;
 	component: Component | null;
+	dismissable: boolean;
 	props?: Record<string, unknown>;
 }
 
@@ -20,25 +21,32 @@ function resolveIfAnyPending(value: unknown = false) {
 export const modalStore = writable<ModalState>({
 	isOpen: false,
 	component: null,
+	dismissable: false,
 	props: {}
 });
 
 export function open<T extends Record<string, unknown>, P = void>(
 	component: Component<T>,
-	props: T
+	props: T,
+	dismissable = false
 ): Promise<P> {
 	console.assert(lastPromise === null, 'Não deveria abrir modais em cima de outros modais');
 	resolveIfAnyPending();
 
 	return new Promise((resolve) => {
 		lastPromise = resolve as (value: unknown) => void;
-		modalStore.set({ component: component as Component, props, isOpen: true });
+		modalStore.set({
+			component: component as Component,
+			props,
+			isOpen: true,
+			dismissable: dismissable
+		});
 	});
 }
 
 function close(value?: unknown) {
 	// @todo joão, precisa desmontar o componente depois da animação de fade-out
-	modalStore.set({ component: null, props: {}, isOpen: false });
+	modalStore.set({ component: null, props: {}, isOpen: false, dismissable: false });
 
 	resolveIfAnyPending(value);
 }

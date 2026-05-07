@@ -158,7 +158,11 @@
 	}
 
 	async function openFilterOption() {
-		const filter: FilterProcessor = await Modal.open(FilterOptionsModal, { close: Modal.close });
+		const filter: FilterProcessor = await Modal.open(
+			FilterOptionsModal,
+			{ close: Modal.close },
+			true
+		);
 
 		filterSelected.current = filter;
 	}

@@ -3,7 +3,14 @@
 	import { fade, fly } from 'svelte/transition';
 
 	const Component = $derived($modalStore.component);
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.code === 'Escape') {
+			Modal.close();
+		}
+	}
 </script>
+
+<svelte:document onkeydown={$modalStore.isOpen && $modalStore.dismissable ? handleKeyDown : null} />
 
 {#if $modalStore.isOpen}
 	<div class="backdrop" transition:fade={{ duration: 250 }}>
