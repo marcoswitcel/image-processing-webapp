@@ -51,16 +51,28 @@ function close(value?: unknown) {
 	resolveIfAnyPending(value);
 }
 
+/**
+ * Exibe um modal de confirmação; perguntas que precisam de sim ou não
+ * @param title título do modal de confirmação
+ * @param description descrição e ou detalhes extras
+ * @returns promise que resolve quando o usuário interage com o botão de confirmação ou declínio
+ */
 export function confirm(title: string, description: string): Promise<boolean> {
-	return open(ConfirmationModal, { title, description, close: close });
+	return open(ConfirmationModal, { title, description, close }, false);
 }
 
 export function alert(title: string, description: string): Promise<void> {
-	return open(AlertModal, { title, description, close: close });
+	return open(AlertModal, { title, description, close });
 }
 
-export function loading(): Promise<void> {
-	return open(LoadingModal, {});
+/**
+ * Modal utilitário usado para indicar que alguma "coisa" está acontecendo,
+ * por exemplo: aguardando a câmera inicializar
+ * @param title descrição que aparece modal
+ * @returns promise que resolve quando molda é fechado
+ */
+export function loading(title?: string): Promise<void> {
+	return open(LoadingModal, { title });
 }
 
 export const Modal = {

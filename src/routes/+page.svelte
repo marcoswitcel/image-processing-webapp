@@ -62,7 +62,7 @@
 
 		const userMediaPromise = navigator.mediaDevices.getUserMedia({ video: true, audio: false });
 
-		Modal.loading();
+		Modal.loading('Iniciando câmera...');
 
 		const stream = await userMediaPromise;
 

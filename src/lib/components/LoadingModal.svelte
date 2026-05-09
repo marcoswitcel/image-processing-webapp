@@ -1,8 +1,13 @@
 <script lang="ts">
+	interface Props {
+		title?: string;
+	}
+
+	const { title = 'Carregando...' }: Props = $props();
 </script>
 
 <div class="content">
-	<h2 class="title">Carregando...</h2>
+	<h2 class="title">{title}</h2>
 </div>
 
 <style>
