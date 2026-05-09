@@ -432,6 +432,13 @@ export const filtersInfo: FilterInfo[] = [
 		false,
 		edgeDetectionWithGaussianBlur
 	),
+	new FilterInfo(
+		'Detecção de Bordas / Invertido',
+		'',
+		false,
+		false,
+		makeFilterOutOfChain([edgeDetection, invertFilter])
+	),
 	new FilterInfo('Teste de combinação', 'Teste de combinação', false, false, combinationTestFilter)
 ];
 
