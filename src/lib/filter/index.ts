@@ -414,6 +414,7 @@ export class FilterInfo {
 }
 
 export const filtersInfo: FilterInfo[] = [
+	new FilterInfo('Denoise temporal', 'Denoise temporal', true, false, temporalDenoising),
 	new FilterInfo('Gaussian Blur (3x3)', 'Gaussian Blur de 3 por 3', false, false, gaussianBlur),
 	new FilterInfo('Gaussian Blur (5x5)', 'Gaussian Blur de 5 por 5', false, false, gaussianBlur5x5),
 	new FilterInfo('Tons de Cinza', 'Tons de Cinza', false, false, grayScale),
@@ -439,7 +440,7 @@ export const filtersInfo: FilterInfo[] = [
 		false,
 		makeFilterOutOfChain([edgeDetection, invertFilter])
 	),
-	new FilterInfo('Teste de combinação', 'Teste de combinação', false, false, combinationTestFilter)
+	new FilterInfo('Teste de combinação', 'Teste de combinação', true, false, combinationTestFilter)
 ];
 
 // @ts-expect-error exportando filtros
