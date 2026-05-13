@@ -3,11 +3,12 @@
 	import Button from '$lib/components/Button.svelte';
 	import CameraPreview from '$lib/components/CameraPreview.svelte';
 	import NodeEditor from '$lib/components/NodeEditor.svelte';
+	import { filtersInfo } from '$lib/filter';
 	import { EditableFilterNode } from '$lib/filter-graph/index.svelte';
 	import { innerHeight, innerWidth } from 'svelte/reactivity/window';
 
 	const nodes: EditableFilterNode[] = $state([]);
-	let filterNameSelected: string = $state('edge');
+	let filterNameSelected: string = $state('webcam');
 
 	function add() {
 		if (filterNameSelected) {
@@ -25,10 +26,11 @@
 
 	<NodeEditor width={innerWidth.current} height={innerHeight.current} {nodes}></NodeEditor>
 	<select name="filters" id="filters" class="filter-selection" bind:value={filterNameSelected}>
-		<option value="edge">Detecção de Borda</option>
-		<option value="grayScale">Tons de Cinza</option>
 		<option value="webcam">Webcam</option>
 		<option value="ouput">Saída</option>
+		{#each filtersInfo as filter (filter.filterName)}
+			<option value={filter.filterName}>{filter.description}</option>
+		{/each}
 	</select>
 	<Button label="Adicionar Filtro" onclick={() => add()}></Button>
 	<CameraPreview
